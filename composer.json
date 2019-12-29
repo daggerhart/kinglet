@@ -1,0 +1,16 @@
+{
+  "name": "daggerhart/kinglet",
+  "description": "WordPress admin classes.",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Jonathan Daggerhart",
+      "email": "jonathan@daggerhart.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kinglet\\": "src/"
+    }
+  }
+}
