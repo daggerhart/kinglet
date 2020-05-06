@@ -96,12 +96,12 @@ abstract class PageBase {
 	 * @param $type
 	 */
 	public function addMessage( $message, $type ) {
-		$uid  = wp_get_current_user()->ID;
+		$uid = wp_get_current_user()->ID;
 		$hash = md5( $message . $type );
 
 		$this->messages[ $uid ][ $hash ] = [
-			'message'   => $message,
-			'type'      => $type,
+			'message' => $message,
+			'type' => $type,
 			'timestamp' => time(),
 		];
 
@@ -233,12 +233,12 @@ abstract class PageBase {
 	 * @param $action
 	 */
 	public function routeAction( $action ) {
-		$redirect     = $this->redirectPath();
-		$actions      = $this->actions();
+		$redirect = $this->redirectPath();
+		$actions = $this->actions();
 		$valid_action = $action && ! empty( $actions[ $action ] ) && is_callable( $actions[ $action ] );
 
 		// All actions should be nonced and verified.
-		$nonce    = ! empty( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : FALSE;
+		$nonce = ! empty( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : FALSE;
 		$verified = FALSE;
 
 		if ( $nonce ) {
@@ -248,7 +248,7 @@ abstract class PageBase {
 		// If we have a valid action and a verified nonce, execute the action.
 		if ( $valid_action && $nonce && $verified ) {
 			$this->routed = TRUE;
-			$result       = call_user_func( $actions[ $action ] );
+			$result = call_user_func( $actions[ $action ] );
 
 			if ( is_array( $result ) && ! empty( $result['redirect'] ) ) {
 				$redirect = $result['redirect'];
@@ -291,39 +291,38 @@ abstract class PageBase {
 	 * Output the page.
 	 */
 	public function showPage() {
-		$messages     = $this->getMessages();
+		$messages = $this->getMessages();
 		$descriptions = $this->description();
 		if ( ! empty( $descriptions ) && ! is_array( $descriptions ) ) {
 			$descriptions = [ $descriptions ];
 		}
 		?>
-      <div class="wrap <?php print $this->slug() ?>-wrapper">
-        <h2><?
-			print $this->title(); ?></h2>
+		<div class="wrap <?php print $this->slug() ?>-wrapper">
+			<h2><?php print $this->title(); ?></h2>
 
-		  <?php if ( ! empty( $messages ) ): ?>
-            <div id="message">
-				<?php foreach ( $messages as $message ): ?>
-                  <div
-                    class="<?php print $message['type'] ?> notice is-dismissible">
-                    <p><?php print $message['message'] ?></p>
-                  </div>
-				<?php endforeach ?>
-            </div>
-		  <?php endif ?>
+			<?php if ( ! empty( $messages ) ): ?>
+				<div id="message">
+					<?php foreach ( $messages as $message ): ?>
+						<div
+							class="<?php print $message['type'] ?> notice is-dismissible">
+							<p><?php print $message['message'] ?></p>
+						</div>
+					<?php endforeach ?>
+				</div>
+			<?php endif ?>
 
-		  <?php if ( ! empty( $descriptions ) ): ?>
-            <div class="box description">
-				<?php foreach ( $descriptions as $description ): ?>
-                  <p><?php print $description ?></p>
-				<?php endforeach ?>
-            </div>
-		  <?php endif ?>
+			<?php if ( ! empty( $descriptions ) ): ?>
+				<div class="box description">
+					<?php foreach ( $descriptions as $description ): ?>
+						<p><?php print $description ?></p>
+					<?php endforeach ?>
+				</div>
+			<?php endif ?>
 
-        <div class="<?php print $this->slug() ?>-content">
-			<?php print $this->page() ?>
-        </div>
-      </div>
+			<div class="<?php print $this->slug() ?>-content">
+				<?php print $this->page() ?>
+			</div>
+		</div>
 		<?php
 	}
 
@@ -339,7 +338,7 @@ abstract class PageBase {
 	public function result( $message, $redirect = NULL, $type = 'updated' ) {
 		$result = [
 			'message' => $message,
-			'type'    => $type,
+			'type' => $type,
 		];
 
 		if ( $redirect ) {
