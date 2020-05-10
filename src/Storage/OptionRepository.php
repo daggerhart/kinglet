@@ -2,64 +2,78 @@
 
 namespace Kinglet\Storage;
 
+use Kinglet\Registry;
+
 /**
  * Class OptionRepository
  *
  * @package Kinglet
  */
-class OptionRepository extends OptionRepositoryImmutable {
+class OptionRepository extends Registry implements RepositoryInterface {
 
+	/**
+	 * Value of the option_name column in the wp_options table.
+	 *
+	 * @var string
+	 */
+	protected $optionName = '';
+
+	/**
+	 * Default values provided during creation.
+	 *
+	 * @var array
+	 */
+	protected $defaultItems = [];
+
+	/**
+	 * Whether to load the option when WordPress starts up.
+	 *
+	 * @var bool
+	 */
 	protected $autoload;
 
 	/**
 	 * OptionRepository constructor.
 	 *
-	 * {@inheritDoc}
+	 * @param string $option_name
+	 * @param array $default_values
 	 * @param bool $autoload
 	 *   Whether to load the option when WordPress starts up.
 	 */
 	public function __construct( $option_name, $default_values = [], $autoload = TRUE ) {
-		parent::__construct( $option_name, $default_values );
-		$this->autoload = $autoload;
+		$this->optionName = $option_name;
+		$this->defaultItems = $default_values;
+		$this->setAutoload( $autoload );
+		parent::__construct( get_option( $this->optionName, $this->defaultItems ) );
 	}
 
 	/**
-	 * Set a new value in the store by name.
+	 * Get the name of the option.
 	 *
-	 * @param string $key
-	 * @param mixed $value
+	 * @return string
 	 */
-	public function set( $key, $value ) {
-		$this->values[ $key ] = $value;
+	public function optionName() {
+		return $this->optionName;
 	}
 
 	/**
-	 * Remove a value from the store by name by using the unset() function.
+	 * Set the autoload status of the option.
 	 *
-	 * @param string $key
+	 * @param $autoload
 	 */
-	public function unset( $key ){
-		unset( $this->values[ $key ]);
+	public function setAutoload( $autoload ) {
+		$this->autoload = (bool) $autoload;
 	}
 
 	/**
-	 * Updates the value of an option that was already added.
-	 *
-	 * If the option does not exist, it will be created.
-	 *
-	 * You do not need to serialize values. If the value needs to be serialized,
-	 * then it will be serialized before it is inserted into the database.
-	 *
-	 * @return bool
+	 * {@inheritdoc}
 	 */
 	public function save() {
-		return update_option( $this->optionName, $this->values, $this->autoload );
+		return update_option( $this->optionName, $this->items, $this->autoload );
 	}
 
 	/**
-	 * Removes the option from the database by name.
-	 *
-	 * @return bool
+	 * {@inheritdoc}
 	 */
 	public function delete() {
 		return delete_option( $this->optionName );
