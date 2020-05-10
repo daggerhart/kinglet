@@ -1,8 +1,6 @@
 <?php
 
-/*
- * Define paths when instantiating the Finder object.
- */
+// Define paths when instantiating the Finder object.
 $finder = new \Kinglet\FileSystem\Finder([
 	get_stylesheet_directory(),
 ]);
@@ -16,9 +14,7 @@ foreach ($files as $fileinfo) {
 	echo $fileinfo->getRealPath() . '<br>';
 }
 
-/*
- * Or set paths with the in() method.
- */
+// Or set paths with the in() method.
 $dirs = $finder->in(ABSPATH . 'wp-content/uploads')->recurse()->dirs();
 
 /** @var \SplFileInfo $fileinfo */
