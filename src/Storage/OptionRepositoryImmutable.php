@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinglet;
+namespace Kinglet\Storage;
 
 /**
  * Class OptionRepositoryImmutable
@@ -79,25 +79,6 @@ class OptionRepositoryImmutable implements \IteratorAggregate, \Countable {
 		if ( $this->has( $key ) ) {
 			return $this->values[ $key ];
 		}
-	}
-
-	/**
-	 * Set a new value in the store by name.
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 */
-	public function set( $key, $value ) {
-		$this->values[ $key ] = $value;
-	}
-
-	/**
-	 * Remove a value from the store by name by using the unset() function.
-	 *
-	 * @param string $key
-	 */
-	public function __unset( $key ){
-		unset( $this->values[ $key ]);
 	}
 
 	/**

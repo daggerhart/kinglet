@@ -2,7 +2,7 @@
 
 namespace Kinglet\Template;
 
-interface RendererInterface {
+interface EngineInterface {
 
 	/**
 	 * Locate a template by suggestions and render it along with the given context.

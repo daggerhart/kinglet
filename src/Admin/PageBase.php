@@ -195,6 +195,43 @@ abstract class PageBase {
 	}
 
 	/**
+	 * Add the page as a top-level admin menu item in the admin dashboard.
+	 *
+	 * @param string $icon_url
+	 * @param null $position
+	 */
+	public function addToMenu( $icon_url = '', $position = null ) {
+		$this->pageHook = add_menu_page(
+			$this->title(),
+			$this->menuTitle(),
+			$this->capability(),
+			$this->slug(),
+			[ $this, 'route' ],
+			$icon_url,
+			$position
+		);
+	}
+
+	/**
+	 * @param \Kinglet\Admin\PageBase|string $parent
+	 *   The parent page object, or the parent's slug.
+	 * @param null $position
+	 */
+	public function addToSubMenu( $parent, $position = null ) {
+		if ( $parent instanceof PageBase ) {
+			$parent = $parent->slug();
+		}
+		$this->pageHook = add_submenu_page(
+			$parent,
+			$this->title(),
+			$this->menuTitle(),
+			$this->capability(),
+			$this->slug(),
+			[ $this, 'route' ]
+		);
+	}
+
+	/**
 	 * Standard action path creation.
 	 *
 	 * @param $action
@@ -303,8 +340,7 @@ abstract class PageBase {
 			<?php if ( ! empty( $messages ) ): ?>
 				<div id="message">
 					<?php foreach ( $messages as $message ): ?>
-						<div
-							class="<?php print $message['type'] ?> notice is-dismissible">
+						<div class="<?php print $message['type'] ?> notice is-dismissible">
 							<p><?php print $message['message'] ?></p>
 						</div>
 					<?php endforeach ?>
@@ -367,12 +403,21 @@ abstract class PageBase {
 	/**
 	 * Very simple debug.
 	 *
-	 * @param $v
+	 * @param [...$v] Any number of values to debug.
 	 *
 	 * @return string
 	 */
-	public function d( $v ) {
-		return "<pre>" . print_r( $v, 1 ) . "</pre>";
+	public function d() {
+		ob_start();
+		foreach (func_get_args() as $value) {
+			if (function_exists('dump')) {
+				dump($value);
+			}
+			else {
+				echo "<pre>" . print_r( $value, 1 ) . "</pre>";
+			}
+		}
+		echo ob_get_clean();
 	}
 
 }
