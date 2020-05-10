@@ -130,6 +130,19 @@ echo $engine->renderString( $string, [
 	'my_h2' => 'Another Example',
 	'some_content' => 'That changes the context key delimiters.'
 ] );
+
+// Render a callable as a template.
+echo $engine->renderCallable( function( $context ) {
+	?>
+	<div>
+		<h2><?= $context['title'] ?></h2>
+		<p><?= $context['content'] ?></p>
+	</div>
+	<?php
+}, [
+	'title' => 'My Title',
+	'content' => 'My content.'
+] );
 ```
 
 ## Option Repository

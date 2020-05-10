@@ -213,7 +213,7 @@ class Engine implements EngineInterface {
 	 * @param array $context
 	 *   Key value pairs of template replacement values.
 	 *
-	 * @return string|string[]
+	 * @return string
 	 */
 	public function renderString( $template, $context = [] ) {
 		$keys = array_map( function( $key ) {
@@ -221,6 +221,26 @@ class Engine implements EngineInterface {
 		}, array_keys( $context ) );
 
 		return str_replace( $keys, array_values( $context ), $template );
+	}
+
+	/**
+	 * Render a callback as if it were a template. Entire context is pass in as single array.
+	 *
+	 * @param callable $template
+	 *   String that acts as a template.
+	 * @param array $context
+	 *   Context
+	 *
+	 * @return string
+	 */
+	public function renderCallable( $template, $context = [] ) {
+		if ( !is_callable( $template ) ) {
+			throw new \RuntimeException( __( 'Template is not callable.' ) );
+		}
+
+		ob_start();
+		call_user_func( $template, $context );
+		return ob_get_clean();
 	}
 
 	/**

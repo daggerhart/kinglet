@@ -213,6 +213,8 @@ abstract class PageBase {
 	}
 
 	/**
+	 * Add this page as a submenu item of another page.
+	 *
 	 * @param \Kinglet\Admin\PageBase|string $parent
 	 *   The parent page object, or the parent's slug.
 	 * @param null $position
