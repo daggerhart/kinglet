@@ -64,7 +64,6 @@ class DiscoverableInterfaceRegistry extends Registry {
 
 	/**
 	 * @return array
-	 * @throws \ReflectionException
 	 */
 	public function all() {
 		if ( empty( $this->items ) ) {
@@ -72,6 +71,19 @@ class DiscoverableInterfaceRegistry extends Registry {
 		}
 
 		return $this->items;
+	}
+
+	/**
+	 * @param $key
+	 *
+	 * @return bool
+	 */
+	public function has( $key ) {
+		if ( empty( $this->items ) ) {
+			$this->items = $this->discover();
+		}
+
+		return isset( $this->items[ $key ] );
 	}
 
 	/**
@@ -111,7 +123,6 @@ class DiscoverableInterfaceRegistry extends Registry {
 
 	/**
 	 * @return array
-	 * @throws \ReflectionException
 	 */
 	protected function discover() {
 		$definitions = [];
@@ -131,14 +142,19 @@ class DiscoverableInterfaceRegistry extends Registry {
 					$class = $namespace . str_replace( ['.php', DIRECTORY_SEPARATOR], ['', '\\'], $file->getBasename() );
 				}
 
-				$reflection = new \ReflectionClass( $class );
+				try {
+					$reflection = new \ReflectionClass( $class );
 
-				if ( !$reflection->isAbstract() && !$reflection->isInterface() && in_array( $this->interfaceName, $reflection->getInterfaceNames() ) ) {
-					$id = $i;
-					if ( $this->idMethodName && is_callable( [ $class, $this->idMethodName ] ) ) {
-						$id = call_user_func( [ $class, $this->idMethodName ] );
+					if ( !$reflection->isAbstract() && !$reflection->isInterface() && in_array( $this->interfaceName, $reflection->getInterfaceNames() ) ) {
+						$id = $i;
+						if ( $this->idMethodName && is_callable( [ $class, $this->idMethodName ] ) ) {
+							$id = call_user_func( [ $class, $this->idMethodName ] );
+						}
+						$definitions[ $id ] = $class;
 					}
-					$definitions[ $id ] = $class;
+				}
+				catch ( \ReflectionException $exception ) {
+					// Fail silently ... for now.
 				}
 
 				$i++;

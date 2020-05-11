@@ -74,17 +74,18 @@ foreach ($dirs as $fileinfo) {
 }
 ```
 
-## Template Engine
+## Template Renderer
 
 Simple templating system.
 
 ```php
-$engine = new Kinglet\Template\Engine( [
+
+$renderer = new Kinglet\Template\FileRenderer( [
 	'paths' => [ __DIR__ ],
 	'extension' => '.html.php',
 ] );
 
-echo $engine->render( 'template-example', [
+echo $renderer->render( 'template-example', [
 	'title' => 'Hello',
 	'content' => 'World',
 ] );
@@ -97,12 +98,15 @@ $suggestions = [
 	'template-example',
 	'template-first-match',
 ];
-echo $engine->render( $suggestions, [
+echo $renderer->render( $suggestions, [
 	'title' => 'My Title',
 	'content' => 'My special content',
 ] );
 
-// Render strings as simple templates.
+/*
+ * String Renderer - Render strings as simple templates.
+ */
+$renderer = new \Kinglet\Template\StringRenderer();
 $string = <<<EOF
 <div>
 	<h2>{{ my_h2 }}</h2>
@@ -110,39 +114,49 @@ $string = <<<EOF
 </div>
 EOF;
 
-echo $engine->renderString( $string, [
+echo $renderer->render( $string, [
 	'my_h2' => 'Example string rendering',
 	'some_content' => 'You can use a string as a template.'
 ] );
 
 // Change the simple replacement delimiters expected by renderString()
-$string = '
-<div>
-	<h2>___my_h2|||</h2>
-	<p>___some_content|||</p>
-</div>
-';
-$engine->setOptions([
-	'string_context_prefix' => '___',
-	'string_context_suffix' => '|||',
+$renderer->setOptions([
+	'prefix' => '||--',
+	'suffix' => '--||',
 ]);
-echo $engine->renderString( $string, [
-	'my_h2' => 'Another Example',
-	'some_content' => 'That changes the context key delimiters.'
+echo $renderer->render( '<strong>||--item_1--||</strong> ||--item_2--||', [
+	'item_1' => 'Hello',
+	'item_2' => 'World'
 ] );
 
-// Render a callable as a template.
-echo $engine->renderCallable( function( $context ) {
+/*
+ * Callable Renderer - Render a callable as a template.
+ */
+$renderer = new \Kinglet\Template\CallableRenderer();
+echo $renderer->render( function( $title, $content ) {
 	?>
 	<div>
-		<h2><?= $context['title'] ?></h2>
-		<p><?= $context['content'] ?></p>
+		<h2><?= $title ?></h2>
+		<p><?= $content ?></p>
 	</div>
 	<?php
 }, [
 	'title' => 'My Title',
 	'content' => 'My content.'
 ] );
+
+$named_parameters = [
+	'third' => 3,
+	'first' => 1,
+	'second' => 2,
+];
+echo $renderer->render( function( $second, $third, $first ) {
+	?>
+	First: <?= $first ?><br>
+	Second: <?= $second ?><br>
+	Third: <?= $third ?><br>
+	<?php
+}, $named_parameters );
 ```
 
 ## Registry
@@ -175,7 +189,7 @@ The discovery sources (file paths) are loaded with a WordPress filter name you d
 
 ```php
 $registry = new \Kinglet\DiscoverableInterfaceRegistry(
-	'Kinglet\Template\TemplateCallableInterface',
+	'Kinglet\Template\FieldInterface',
 	'name',
 	'template-callables'
 );
@@ -232,4 +246,35 @@ foreach ( $repo as $name => $value ) {
 
 // Delete the option from the database
 $repo->delete();
+```
+
+## Form
+
+```php
+$form = \Kinglet\Form\Form::create( [
+	'field_prefix' => 'my-form',
+	'style' => 'box',
+] );
+
+$submitted = $form->getSubmittedValues();
+var_dump($submitted);
+
+$form->setFields( [
+	'first' => [
+		'title' => __( 'Hello' ),
+		'type' => 'text',
+		'value' => $submitted['first'] ?? 'default',
+	],
+	'second' => [
+		'title' => __( 'You like?' ),
+		'type' => 'checkbox',
+		'value' => $submitted['second'] ?? FALSE,
+	],
+	'submit' => [
+		'value' => __( 'Submit' ),
+		'type' => 'submit',
+	],
+] );
+
+echo $form->render();
 ```

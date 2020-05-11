@@ -9,7 +9,7 @@ use Kinglet\FileSystem\Finder;
  *
  * @package Kinglet\Template
  */
-class Engine implements EngineInterface {
+class FileRenderer extends RendererBase {
 
 	/**
 	 * Utility for locating real files.
@@ -36,42 +36,26 @@ class Engine implements EngineInterface {
 	 * Renderer configuration options.
 	 *
 	 * @var array
+	 *   paths (array) - Folders to search for templates within.
+	 *   theme_search (bool) - Include the theme folders.
+	 *   theme_first (bool) - Search the theme folder first.
+	 *   extension (string) - File extension with
 	 */
 	protected $options = [
 		'paths' => [],
 		'theme_search' => TRUE,
 		'theme_first' => TRUE,
 		'extension' => '.php',
-		// Prefix for context keys in renderString() method.
-		'string_context_prefix' => '{{ ',
-		// Suffix for context keys in renderString() method.
-		'string_context_suffix' => ' }}',
 	];
 
 	/**
 	 * Renderer constructor.
 	 *
-	 * @param array $options :
-	 *   paths (array) - Folders to search for templates within.
-	 *   theme_search (bool) - Include the theme folders.
-	 *   theme_first (bool) - Search the theme folder first.
-	 *   extension (string) - File extension with
+	 * @param array $options
 	 */
 	public function __construct( $options = [] ) {
 		$this->setFinder( new Finder() );
-
-		if ( !empty( $options ) ) {
-			$this->setOptions( $options );
-		}
-	}
-
-	/**
-	 * Set new configuration values.
-	 *
-	 * @param array $options
-	 */
-	public function setOptions( $options = [] ) {
-		$this->options = array_replace( $this->options, $options );
+		parent::__construct( $options );
 	}
 
 	/**
@@ -95,16 +79,16 @@ class Engine implements EngineInterface {
 	/**
 	 * Locate a template by suggestions and return the rendered output.
 	 *
-	 * @param array|string $suggestions
+	 * @param array|string $templates
 	 *   Desired template filenames ordered from lowest to highest priority.
 	 * @param array $context
 	 *   Variables to be injected into the context of the template.
 	 *
 	 * @return string
 	 */
-	public function render( $suggestions, $context = [] ) {
+	public function render( $templates, $context = [] ) {
 		$output = '';
-		$template = $this->find( $suggestions );
+		$template = $this->find( $templates );
 		if ( $template ) {
 			$output = $this->renderTemplate( $template, (array) $context );
 		}
@@ -203,44 +187,6 @@ class Engine implements EngineInterface {
 		}, $suggestions );
 
 		return $suggestions;
-	}
-
-	/**
-	 * Simple string replacement with context key character wrappings.
-	 *
-	 * @param string $template
-	 *   String that acts as a template.
-	 * @param array $context
-	 *   Key value pairs of template replacement values.
-	 *
-	 * @return string
-	 */
-	public function renderString( $template, $context = [] ) {
-		$keys = array_map( function( $key ) {
-			return $this->options['string_context_prefix'] . $key . $this->options['string_context_suffix'];
-		}, array_keys( $context ) );
-
-		return str_replace( $keys, array_values( $context ), $template );
-	}
-
-	/**
-	 * Render a callback as if it were a template. Entire context is pass in as single array.
-	 *
-	 * @param callable $template
-	 *   String that acts as a template.
-	 * @param array $context
-	 *   Context
-	 *
-	 * @return string
-	 */
-	public function renderCallable( $template, $context = [] ) {
-		if ( !is_callable( $template ) ) {
-			throw new \RuntimeException( __( 'Template is not callable.' ) );
-		}
-
-		ob_start();
-		call_user_func( $template, $context );
-		return ob_get_clean();
 	}
 
 	/**

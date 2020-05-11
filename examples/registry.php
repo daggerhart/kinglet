@@ -20,7 +20,7 @@ var_dump( $registry->all() );
  * Discoverable Interface Registry is used to find PHP classes.
  */
 $registry = new \Kinglet\DiscoverableInterfaceRegistry(
-	'Kinglet\Template\TemplateCallableInterface',
+	'Kinglet\Template\FieldInterface',
 	'name',
 	'template-callables'
 );

@@ -2,16 +2,16 @@
 
 namespace Kinglet\Template;
 
-interface EngineInterface {
+interface RendererInterface {
 
 	/**
 	 * Locate a template by suggestions and render it along with the given context.
 	 *
-	 * @param array $suggestions
+	 * @param array $templates
 	 * @param array $context
 	 *
 	 * @return string
 	 */
-	public function render( $suggestions, $context = [] );
+	public function render( $templates, $context = [] );
 
 }
