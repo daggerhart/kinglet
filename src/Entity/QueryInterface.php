@@ -13,4 +13,18 @@ interface QueryInterface {
 	 */
 	public function execute( $callback = null );
 
+	/**
+	 * Get the original core *_Query object used.
+	 *
+	 * @return mixed
+	 */
+	public function query();
+
+	/**
+	 * Get all results from the query.
+	 *
+	 * @return mixed
+	 */
+	public function results();
+
 }

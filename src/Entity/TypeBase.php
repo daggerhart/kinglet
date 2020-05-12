@@ -7,7 +7,7 @@ namespace Kinglet\Entity;
  *
  * @package Kinglet\Entity\Type
  */
-abstract class EntityBase implements TypeObjectInterface {
+abstract class TypeBase implements TypeInterface {
 
 	/**
 	 * Stored object that is being normalized.
@@ -17,7 +17,7 @@ abstract class EntityBase implements TypeObjectInterface {
 	protected $object;
 
 	/**
-	 * AbstractNormalObject constructor.
+	 * TypeBase constructor.
 	 *
 	 * @param $object
 	 *   The object being normalized.
@@ -27,9 +27,14 @@ abstract class EntityBase implements TypeObjectInterface {
 	}
 
 	/**
-	 * @param string $name
-	 *
-	 * @return mixed
+	 * {@inheritDoc}
+	 */
+	public function object() {
+		return $this->object;
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	public function meta( $name ) {
 		return get_metadata( $this->type(), $this->id(), $name, true );

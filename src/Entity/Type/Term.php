@@ -2,7 +2,7 @@
 
 namespace Kinglet\Entity\Type;
 
-use Kinglet\Entity\EntityBase;
+use Kinglet\Entity\TypeBase;
 use Kinglet\Entity\TypeBundleInterface;
 use Kinglet\Entity\TypeTitleInterface;
 
@@ -11,7 +11,7 @@ use Kinglet\Entity\TypeTitleInterface;
  *
  * @package Kinglet\Entity\Type
  */
-class Term extends EntityBase implements TypeBundleInterface, TypeTitleInterface {
+class Term extends TypeBase implements TypeBundleInterface, TypeTitleInterface {
 
 	/**
 	 * @var \WP_Term

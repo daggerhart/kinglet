@@ -7,7 +7,7 @@ namespace Kinglet\Entity;
  *
  * @package Kinglet\Entity
  */
-interface TypeObjectInterface {
+interface TypeInterface {
 
 	/**
 	 * Create an instance of this type of object from an id.
@@ -62,5 +62,12 @@ interface TypeObjectInterface {
 	 * @return mixed
 	 */
 	public function meta( $name );
+
+	/**
+	 * Return the raw object being decorated.
+	 *
+	 * @return mixed
+	 */
+	public function object();
 
 }

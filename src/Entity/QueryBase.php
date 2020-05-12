@@ -7,62 +7,87 @@ namespace Kinglet\Entity;
  *
  * @package Kinglet\Entity\Query
  */
-abstract class QueryBase implements QueryInterface {
+abstract class QueryBase implements QueryInterface, \IteratorAggregate, \Countable {
 
 	/**
 	 * Arguments that augment the query results.
 	 *
 	 * @var array
 	 */
-	public $arguments = array();
+	protected $arguments = [];
 
 	/**
 	 * The last executed query object.
 	 *
 	 * @var object
 	 */
-	public $query;
+	protected $query;
 
 	/**
 	 * Results of the last query.
 	 *
 	 * @var array
 	 */
-	public $results = array();
+	protected $results = [];
 
 	/**
 	 * AbstractNormalQuery constructor.
 	 *
 	 * @param array $arguments
 	 */
-	function __construct( array $arguments ) {
+	public function __construct( array $arguments ) {
 		$this->arguments = $arguments;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function query() {
+		return $this->query;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function results() {
+		return $this->results;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getIterator() {
+		return new \ArrayIterator( $this->results );
+	}
+
+	/**
+	 * Counts all the results collected by the iterators.
+	 *
+	 * @throws \Exception
+	 */
+	public function count() {
+		return iterator_count( $this->getIterator() );
 	}
 
 	/**
 	 * Adjust the arguments so that it this query type accepts the same common
 	 * arguments as the other query types.
 	 *
-	 * @param $arguments array
+	 * @param array $array
+	 * @param array $map
+	 *   Pairs that need remapping. Keys are "from", values are "to".
 	 *
 	 * @return array
 	 */
-	public function alterArguments( $arguments ) {
-		$map = array(
-			'number' => 'posts_per_page',
-			'include' => 'posts__in',
-			'exclude' => 'posts__not_in',
-			'search' => 's',
-		);
-
+	public function remapKeys( array $array, array $map ) {
 		foreach ( $map as $from => $to ) {
-			if ( isset( $arguments[ $from ] ) && empty( $arguments[ $to ]) ) {
-				$arguments[ $to ] = $arguments[ $from ];
-				unset( $arguments[ $from ] );
+			if ( isset( $array[ $from ] ) && empty( $array[ $to ] ) ) {
+				$array[ $to ] = $array[ $from ];
+				unset( $array[ $from ] );
 			}
 		}
 
-		return $arguments;
+		return $array;
 	}
 
 }

@@ -16,7 +16,13 @@ class Posts extends QueryBase {
 	 * {@inheritdoc}
 	 */
 	public function execute( $callback = null ) {
-		$arguments = $this->alterArguments( $this->arguments );
+		$arguments = $this->remapKeys( $this->arguments, [
+			'number' => 'posts_per_page',
+			'include' => 'posts__in',
+			'exclude' => 'posts__not_in',
+			'search' => 's',
+		] );
+
 		$this->query = new \WP_Query( $arguments );
 
 		if ( $this->query->have_posts() ) {

@@ -2,7 +2,7 @@
 
 namespace Kinglet\Entity\Type;
 
-use Kinglet\Entity\EntityBase;
+use Kinglet\Entity\TypeBase;
 use Kinglet\Entity\TypeAuthorInterface;
 use Kinglet\Entity\TypeBundleInterface;
 use Kinglet\Entity\TypeImageInterface;
@@ -13,7 +13,7 @@ use Kinglet\Entity\TypeTitleInterface;
  *
  * @package Kinglet\Entity\Type
  */
-class User extends EntityBase implements TypeBundleInterface, TypeTitleInterface, TypeImageInterface, TypeAuthorInterface {
+class User extends TypeBase implements TypeBundleInterface, TypeTitleInterface, TypeImageInterface, TypeAuthorInterface {
 
 	/**
 	 * @var \WP_User

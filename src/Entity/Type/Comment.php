@@ -2,7 +2,7 @@
 
 namespace Kinglet\Entity\Type;
 
-use Kinglet\Entity\EntityBase;
+use Kinglet\Entity\TypeBase;
 use Kinglet\Entity\TypeAuthorInterface;
 use Kinglet\Entity\TypeImageInterface;
 use Kinglet\Entity\TypeTitleInterface;
@@ -12,7 +12,7 @@ use Kinglet\Entity\TypeTitleInterface;
  *
  * @package Kinglet\Entity\Type
  */
-class Comment extends EntityBase implements TypeTitleInterface, TypeImageInterface,TypeAuthorInterface {
+class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface,TypeAuthorInterface {
 
 	/**
 	 * @var \WP_Comment
