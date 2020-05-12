@@ -139,10 +139,10 @@ class Form {
 			$form_styles = new DiscoverableInterfaceRegistry(
 				'Kinglet\Form\FormStyleInterface',
 				'name',
-				'kinglet-form-styles'
+				'kinglet--form-styles--sources'
 			);
 			if ( !$default_form_styles_registered ) {
-				add_filter( 'kinglet-form-styles', function ($sources) {
+				add_filter( 'kinglet--form-styles--sources', function ($sources) {
 					$sources['Kinglet\Form\Style'] = __DIR__ . '/Style';
 					return $sources;
 				} );
@@ -152,10 +152,10 @@ class Form {
 			$field_types = new DiscoverableInterfaceRegistry(
 				'Kinglet\Form\FieldInterface',
 				'name',
-				'kinglet-field-types'
+				'kinglet--field-types--sources'
 			);
 			if ( !$default_field_types_registered ) {
-				add_filter( 'kinglet-field-types', function ($sources) {
+				add_filter( 'kinglet--field-types--sources', function ($sources) {
 					$sources['Kinglet\Form\Field'] = __DIR__ . '/Field';
 					$sources['Kinglet\Form\Field\Element'] = __DIR__ . '/Field/Element';
 					return $sources;

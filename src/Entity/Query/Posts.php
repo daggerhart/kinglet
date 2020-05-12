@@ -15,6 +15,13 @@ class Posts extends QueryBase {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function type() {
+		return 'post';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function execute( $callback = null ) {
 		$arguments = $this->remapKeys( $this->arguments, [
 			'number' => 'posts_per_page',

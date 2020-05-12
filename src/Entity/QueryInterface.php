@@ -5,6 +5,13 @@ namespace Kinglet\Entity;
 interface QueryInterface {
 
 	/**
+	 * Unique string that identifies the type of object this query creates.
+	 *
+	 * @return string
+	 */
+	public function type();
+
+	/**
 	 * Execute a query and return normalized results.
 	 *
 	 * @param null|callable $callback

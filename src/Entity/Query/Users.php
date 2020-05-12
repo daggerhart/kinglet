@@ -15,6 +15,13 @@ class Users extends QueryBase {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function type() {
+		return 'user';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function execute( $callback = NULL ) {
 		$this->query = new \WP_User_Query( $this->arguments );
 

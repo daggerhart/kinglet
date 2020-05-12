@@ -63,7 +63,7 @@ class DiscoverableInterfaceRegistry extends Registry {
 	}
 
 	/**
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function all() {
 		if ( empty( $this->items ) ) {
@@ -74,9 +74,18 @@ class DiscoverableInterfaceRegistry extends Registry {
 	}
 
 	/**
-	 * @param $key
-	 *
-	 * @return bool
+	 * {@inheritdoc}
+	 */
+	public function getIterator() {
+	if ( empty( $this->items ) ) {
+		$this->items = $this->discover();
+	}
+
+	return parent::getIterator();
+}
+
+	/**
+	 * {@inheritdoc}
 	 */
 	public function has( $key ) {
 		if ( empty( $this->items ) ) {
@@ -122,6 +131,8 @@ class DiscoverableInterfaceRegistry extends Registry {
 	}
 
 	/**
+	 * Go searching for the classes that implement the given interface.
+	 *
 	 * @return array
 	 */
 	protected function discover() {

@@ -15,6 +15,13 @@ class Comments extends QueryBase {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function type() {
+		return 'comment';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function execute( $callback = null ) {
 		$this->query = new \WP_Comment_Query( $this->arguments );
 
