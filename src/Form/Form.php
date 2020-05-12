@@ -107,9 +107,9 @@ class Form {
 	 * Form constructor.
 	 *
 	 * @param array $form_options
-	 * @param \Kinglet\Template\RendererInterface|null $renderer
-	 * @param \Kinglet\DiscoverableInterfaceRegistry|null $form_styles
-	 * @param \Kinglet\DiscoverableInterfaceRegistry|null $field_types
+	 * @param RendererInterface $renderer
+	 * @param DiscoverableInterfaceRegistry $form_styles
+	 * @param DiscoverableInterfaceRegistry $field_types
 	 */
 	public function __construct( $form_options, RendererInterface $renderer, DiscoverableInterfaceRegistry $form_styles, DiscoverableInterfaceRegistry $field_types  ) {
 		$this->formOptions = array_replace( $this->defaultFormOptions, $form_options );
@@ -120,12 +120,14 @@ class Form {
 	}
 
 	/**
-	 * @param array $form_options
-	 * @param null $renderer
-	 * @param null $form_styles
-	 * @param null $field_types
+	 * Factory for creating a form w/ default renderer and registries.
 	 *
-	 * @return \Kinglet\Form\Form
+	 * @param array $form_options
+	 * @param RendererInterface|null $renderer
+	 * @param DiscoverableInterfaceRegistry|null $form_styles
+	 * @param DiscoverableInterfaceRegistry|null $field_types
+	 *
+	 * @return Form
 	 */
 	public static function create( $form_options = [], $renderer = null, $form_styles = null, $field_types = null ) {
 		static $default_form_styles_registered = false;
@@ -208,6 +210,8 @@ class Form {
 	}
 
 	/**
+	 * Get the class instance for a named field type.
+	 *
 	 * @param string $type
 	 *
 	 * @return FieldInterface
@@ -239,6 +243,7 @@ class Form {
 			'method' => $this->formOptions['method'],
 			'class' => $this->formOptions['class'],
 		], $this->formOptions['attributes'] ) );
+
 		ob_start();
 		echo "<form {$attributes}>";
 		$style->open( [
@@ -257,6 +262,7 @@ class Form {
 	 */
 	public function close() {
 		$style = $this->getFormStyle( $this->formOptions['style'] );
+
 		ob_start();
 		$style->close();
 		echo "</form>";
@@ -271,7 +277,7 @@ class Form {
 	public function render() {
 		$output = $this->open();
 
-		foreach ( $this->fields as $name => $field ) {
+		foreach ( $this->getFields() as $name => $field ) {
 			$field = $this->processField( $field, $name );
 
 			// Do not render fields users do not have access to.
@@ -297,7 +303,7 @@ class Form {
 		$field_type = $this->getFieldTypeInstance( $field['type'] );
 		$field_html = $this->renderer->render( [ $field_type, 'render' ], [ 'field' => $field ] );
 
-		// Do not wrap very simple fields.
+		// Do not wrap fields that have no values the wrapper deals with.
 		if ( empty( $field['title'] ) && empty( $field['description'] ) && empty( $field['help'] ) ) {
 			return $field_html;
 		}
