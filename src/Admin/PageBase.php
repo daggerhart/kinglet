@@ -62,7 +62,7 @@ abstract class PageBase {
 	 *
 	 * @return string
 	 */
-	abstract function page();
+	abstract function content();
 
 	/**
 	 * PageBase constructor.
@@ -358,7 +358,7 @@ abstract class PageBase {
 			<?php endif ?>
 
 			<div class="<?php print $this->slug() ?>-content">
-				<?php print $this->page() ?>
+				<?php print $this->content() ?>
 			</div>
 		</div>
 		<?php

@@ -14,7 +14,7 @@ class MyChildPage extends \Kinglet\Admin\PageBase {
 		return __( 'Example hello world page.' );
 	}
 
-	public function page() {
+	public function content() {
 		echo 'Hello, World!';
 	}
 
