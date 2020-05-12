@@ -25,10 +25,40 @@ class StringRenderer extends RendererBase {
 	 * @return string
 	 */
 	public function render( $template, $context = [] ) {
-		$keys = array_map( function( $key ) {
-			return $this->options['prefix'] . $key . $this->options['suffix'];
-		}, array_keys( $context ) );
+		$pairs = $this->replacements( $context );
+		return strtr( $template, $pairs );
+	}
 
-		return str_replace( $keys, array_values( $context ), $template );
+	/**
+	 * Render an array of templates with a single context.
+	 *
+	 * @param array $templates
+	 * @param array $context
+	 *
+	 * @return array
+	 */
+	public function renderArray( $templates, $context ) {
+		$pairs = $this->replacements( $context );
+		$templates = (array) $templates;
+		$rendered = [];
+		foreach ( $templates as $i => $template ) {
+			$rendered[ $i ] = strtr( $template, $pairs );
+		}
+		return $rendered;
+	}
+
+	/**
+	 * Create the replacement pairs for rendering.
+	 *
+	 * @param array $context
+	 *
+	 * @return array
+	 */
+	protected function replacements( $context ) {
+		$pairs = [];
+		foreach ( $context as $key => $value ) {
+			$pairs[ $this->options['prefix'] . $key . $this->options['suffix'] ] = $value;
+		}
+		return $pairs;
 	}
 }
