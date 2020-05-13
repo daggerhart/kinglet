@@ -33,6 +33,13 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	protected $autoload;
 
 	/**
+	 * Whether or not the option exists in the database.
+	 *
+	 * @var bool
+	 */
+	protected $exists = FALSE;
+
+	/**
 	 * OptionRepository constructor.
 	 *
 	 * @param string $option_name
@@ -43,6 +50,7 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	public function __construct( $option_name, $default_values = [], $autoload = TRUE ) {
 		$this->optionName = $option_name;
 		$this->defaultItems = $default_values;
+		$this->exists = !!get_option( $this->optionName, FALSE );
 		$this->setAutoload( $autoload );
 		parent::__construct( get_option( $this->optionName, $this->defaultItems ) );
 	}
@@ -69,7 +77,8 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	 * {@inheritdoc}
 	 */
 	public function save() {
-		return update_option( $this->optionName, $this->items, $this->autoload );
+		$this->exists = update_option( $this->optionName, $this->items, $this->autoload );
+		return $this->exists();
 	}
 
 	/**
@@ -77,6 +86,13 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	 */
 	public function delete() {
 		return delete_option( $this->optionName );
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function exists() {
+		return $this->exists;
 	}
 
 }

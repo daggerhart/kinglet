@@ -41,28 +41,28 @@ abstract class PageBase {
 	 *
 	 * @return string
 	 */
-	abstract function title();
+	abstract public function title();
 
 	/**
 	 * This page's description.
 	 *
 	 * @return string
 	 */
-	abstract function description();
+	abstract public function description();
 
 	/**
 	 * This page's unique slug.
 	 *
 	 * @return string
 	 */
-	abstract function slug();
+	abstract public function slug();
 
 	/**
 	 * Override in child to produce page output.
 	 *
 	 * @return string
 	 */
-	abstract function content();
+	abstract public function content();
 
 	/**
 	 * PageBase constructor.

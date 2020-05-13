@@ -4,7 +4,7 @@ namespace Kinglet\Form\Field\Element;
 
 use Kinglet\Form\FieldBase;
 
-class ItemList extends FieldBase {
+class ListItems extends FieldBase {
 
 	/**
 	 * {@inheritDoc}
@@ -16,11 +16,11 @@ class ItemList extends FieldBase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function render( $context ) {
-		$type = !empty( $context['type'] ) ? $context['type'] : 'ul';
+	public function render( $field ) {
+		$type = !empty( $field['list_type'] ) ? $field['list_type'] : 'ul';
 		?>
-		<<?php echo $type ?> <?php echo $this->attributes( $context['attributes'] ); ?>>
-			<?php foreach ( $context['items'] as $key => $item ) { ?>
+		<<?php echo $type ?> <?php echo $this->attributes( $field['attributes'] ); ?>>
+			<?php foreach ( $field['items'] as $key => $item ) { ?>
 				<li class="item"><?php print $item; ?></li>
 			<?php } ?>
 		</<?php echo $type ?>>
