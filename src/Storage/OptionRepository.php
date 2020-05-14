@@ -77,8 +77,10 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	 * {@inheritdoc}
 	 */
 	public function save() {
-		$this->exists = update_option( $this->optionName, $this->items, $this->autoload );
-		return $this->exists();
+		if ( ! $this->exists ) {
+			$this->exists = TRUE;
+		}
+		return update_option( $this->optionName, $this->items, $this->autoload );
 	}
 
 	/**

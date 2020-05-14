@@ -21,13 +21,23 @@ class Form {
 	 * @var array
 	 */
 	protected $defaultFormOptions = [
+		// Unique ID for this form instance, and assigned as id on form element.
 		'id' => '',
+		// Additional classes to add the to the form element.
 		'class' => [],
+		// Request method. POST|GET
 		'method' => 'POST',
+		// Form action URL.
 		'action' => '',
-		'attributes' => [],
-		'style' => 'flat',
+		// Prefix all field names with this value.
 		'form_prefix' => 'kinglet',
+		// Include the <form> element during rendering.
+		'form_element' => TRUE,
+		// Additional form_element attributes.
+		'attributes' => [],
+		// Form Style name.
+		'style' => 'flat',
+		// Array of field definitions for this form.
 		'fields' => [],
 	];
 
@@ -245,7 +255,9 @@ class Form {
 		], $this->formOptions['attributes'] ) );
 
 		ob_start();
-		echo "<form {$attributes}>";
+		if ( $this->formOptions['form_element'] ) {
+			echo "<form {$attributes}>";
+		}
 		$style->open( [
 			'class' => [
 				'form--' . $this->formOptions['id'],
@@ -265,7 +277,9 @@ class Form {
 
 		ob_start();
 		$style->close();
-		echo "</form>";
+		if ( $this->formOptions['form_element'] ) {
+			echo "</form>";
+		}
 		return ob_get_clean();
 	}
 
@@ -302,11 +316,6 @@ class Form {
 		// Template the field.
 		$field_type = $this->getFieldTypeInstance( $field['type'] );
 		$field_html = $this->renderer->render( [ $field_type, 'render' ], [ 'field' => $field ] );
-
-		// Do not wrap fields that have no values the wrapper deals with.
-		if ( empty( $field['title'] ) && empty( $field['description'] ) && empty( $field['help'] ) ) {
-			return $field_html;
-		}
 
 		// Template the wrapper.
 		$style = $this->getFormStyle( $this->formOptions['style'] );
