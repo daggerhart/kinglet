@@ -6,7 +6,6 @@ Base class meant to be inherited to create custom admin pages.
 
 ```php
 <?php
-
 class MyParentPage extends \Kinglet\Admin\PageBase {
 
 	public function slug() {
@@ -29,6 +28,7 @@ class MyParentPage extends \Kinglet\Admin\PageBase {
 ```
 
 ```php
+<?php
 class MyChildPage extends \Kinglet\Admin\PageBase {
 
 	public function slug() {
@@ -53,6 +53,7 @@ class MyChildPage extends \Kinglet\Admin\PageBase {
 ### Registering admin pages in a plugin.
 
 ```php
+<?php
 add_action( 'admin_menu', function() {
 	$parentPage = new MyParentPage();
 	$parentPage->addToMenu();

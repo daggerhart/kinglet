@@ -7,6 +7,7 @@ Normalize WordPress objects into a shared type of thing with knowable methods.
 All types share the same method names to retrieve shared data.
 
 ```php
+<?php
 $typesRegistry = new \Kinglet\DiscoverableInterfaceRegistry(
     'Kinglet\Entity\TypeInterface',
     'type',
@@ -43,6 +44,7 @@ var_dump($results);
 With shared types we can now share query interfaces.
 
 ```php
+<?php
 $queryRegistry = new \Kinglet\DiscoverableInterfaceRegistry(
     'Kinglet\Entity\QueryInterface',
     'type',

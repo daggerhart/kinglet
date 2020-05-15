@@ -3,6 +3,7 @@
 Registry is a generic object that stores values and is iterable.
 
 ```php
+<?php
 // Registry is a simple data store mechanism.
 $registry = new \Kinglet\Registry();
 $registry->set('key', 'value');
@@ -27,6 +28,7 @@ A discoverable interface registry is a Registry object can find classes that imp
 The discovery sources (file paths) are loaded with a WordPress filter name you define when instantiating the registry.
 
 ```php
+<?php
 /*
  * Discoverable Interface Registry is used to find PHP classes.
  */

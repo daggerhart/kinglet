@@ -5,6 +5,7 @@ Object wrapper for a WordPress option.
 Similar to the Registry, OptionRepository is iterable.
 
 ```php
+<?php
 $repo = new \Kinglet\Repository\OptionRepository( 'my_plugin_settings', [
 	'key_1' => 'a',
 	'key_2' => 'b',

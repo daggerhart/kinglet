@@ -3,6 +3,7 @@
 Simple form rendering system.
 
 ```php
+<?php
 $form = \Kinglet\Form\Form::create( [
 	'field_prefix' => 'my-form',
 	'style' => 'box',

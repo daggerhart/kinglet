@@ -5,6 +5,7 @@ Simple templating system.
 ## File Templates
 
 ```php
+<?php
 $renderer = new Kinglet\Template\FileRenderer( [
 	'paths' => [ __DIR__ . '/templates' ],
 	'extension' => '.html.php',
@@ -32,6 +33,7 @@ echo $renderer->render( $suggestions, [
 ## String Templates
 
 ```php
+<?php
 /*
  * String Renderer - Render strings as simple templates.
  */
@@ -62,6 +64,7 @@ echo $renderer->render( '<strong>||--item_1--||</strong> ||--item_2--||', [
 ## Callables as templates
 
 ```php
+<?php
 /*
  * Callable Renderer - Render a callable as a template.
  */

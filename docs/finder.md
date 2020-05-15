@@ -3,6 +3,7 @@
 File system browser for locating files and directories. Very-inspired by symfony/finder.
 
 ```php
+<?php
 // Define paths when instantiating the Finder object.
 $finder = new \Kinglet\FileSystem\Finder([
 	get_stylesheet_directory(),
