@@ -1,6 +1,6 @@
 <?php
 
-namespace Kingley\Container;
+namespace Kinglet\Container;
 
 interface ContainerInterface extends \Psr\Container\ContainerInterface {
 

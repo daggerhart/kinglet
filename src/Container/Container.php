@@ -4,7 +4,6 @@ namespace Kinglet\Container;
 
 use Kinglet\Invoker\Invoker;
 use Kinglet\Invoker\InvokerInterface;
-use Kingley\Container\ContainerInterface;
 
 class Container implements ContainerInterface {
 

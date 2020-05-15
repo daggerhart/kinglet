@@ -141,7 +141,7 @@ class DiscoverableInterfaceRegistry extends Registry {
 		$i = 0;
 		foreach ( $this->getSources() as $namespace => $location ) {
 			$finder = new Finder();
-			$results = $finder->in( $location )->files( '*.php' );
+			$results = $finder->recurse()->in( $location )->files( '*.php' );
 
 			/** @var \SplFileInfo $file */
 			foreach ( $results as $file ) {
