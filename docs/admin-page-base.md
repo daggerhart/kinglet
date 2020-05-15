@@ -5,6 +5,8 @@ Base class meant to be inherited to create custom admin pages.
 ## Examples
 
 ```php
+<?php
+
 class MyParentPage extends \Kinglet\Admin\PageBase {
 
 	public function slug() {
