@@ -16,7 +16,7 @@ abstract class MetaBoxBase {
 	 *
 	 * @var bool
 	 */
-	static protected $initialized = FALSE;
+	protected $initialized = FALSE;
 
 	/**
 	 * MetaBoxBase constructor.
@@ -26,7 +26,7 @@ abstract class MetaBoxBase {
 	public function __construct( $screens ) {
 		$this->screens = (array) $screens;
 
-		if ( !static::$initialized ) {
+		if ( !$this->initialized ) {
 			$this->init();
 		}
 	}
@@ -56,7 +56,7 @@ abstract class MetaBoxBase {
 	 * Register the meta box with WordPress.
 	 */
 	protected function init() {
-		static::$initialized = TRUE;
+		$this->initialized = TRUE;
 		add_action( 'add_meta_boxes', [ $this, 'addMetaBox' ] );
 
 		foreach ( $this->screens as $screen ) {
