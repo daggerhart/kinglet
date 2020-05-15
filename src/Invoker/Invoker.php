@@ -18,6 +18,7 @@ class Invoker implements InvokerInterface {
 	/**
 	 * @param $callable
 	 * @param array $parameters
+	 *
 	 * @throws \ReflectionException
 	 */
 	public function call( $callable, array $parameters = [] ) {
@@ -86,13 +87,21 @@ class Invoker implements InvokerInterface {
 		$resolved_parameters = [];
 
 		foreach ( $reflection_parameters as $index => $parameter ) {
+			// Associative array parameters.
 			if ( array_key_exists( $parameter->name, $provided_parameters ) ) {
 				$resolved_parameters[ $index ] = $provided_parameters[ $parameter->name ];
-			} else if ( $parameter->isOptional() ) {
+			} // Optional named parameters.
+			else if ( $parameter->isOptional() ) {
 				try {
 					$resolvedParameters[ $index ] = $parameter->getDefaultValue();
 				} catch ( ReflectionException $e ) {
 					// Can't get default values from PHP internal classes and functions
+				}
+			} // Typehinted parameters.
+			else {
+				$parameter_class = $parameter->getClass();
+				if ( $parameter_class && array_key_exists( $parameter_class->name, $provided_parameters ) ) {
+					$resolved_parameters[ $index ] = $provided_parameters[ $parameter_class->name ];
 				}
 			}
 		}
