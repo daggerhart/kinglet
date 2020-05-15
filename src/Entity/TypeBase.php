@@ -36,8 +36,8 @@ abstract class TypeBase implements TypeInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function meta( $name ) {
-		return get_metadata( $this->type(), $this->id(), $name, true );
+	public function meta( $name, $single = true ) {
+		return get_metadata( $this->type(), $this->id(), $name, $single );
 	}
 
 }
