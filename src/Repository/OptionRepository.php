@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinglet\Storage;
+namespace Kinglet\Repository;
 
 use Kinglet\Registry;
 
