@@ -40,4 +40,19 @@ abstract class TypeBase implements TypeInterface {
 		return get_metadata( $this->type(), $this->id(), $name, $single );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public function metaUpdate( $name, $value, $prev_value = '' ) {
+		return update_metadata( $this->type(), $this->id(), $name, $value, $prev_value );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function metaDelete( $name, $value = '', $delete_all = false ) {
+		return delete_metadata( $this->type(), $this->id(), $name, $value, $delete_all );
+	}
+
+
 }

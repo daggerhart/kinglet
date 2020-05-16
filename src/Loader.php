@@ -2,6 +2,7 @@
 
 namespace Kinglet;
 
+use Kinglet\Admin\Messenger;
 use Kinglet\Container\Container;
 use Kinglet\Container\ContainerInterface;
 use Kinglet\FileSystem\Finder;
@@ -26,6 +27,8 @@ class Loader {
             'renderer.callable' => CallableRenderer::class,
             'renderer.string' => StringRenderer::class,
             'form.factory' => FormFactory::class,
+	        'current_user' => 'wp_get_current_user',
+	        'messenger' => Messenger::class,
         ] );
 
         // Field Types

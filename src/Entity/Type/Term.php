@@ -22,12 +22,14 @@ class Term extends TypeBase implements TypeBundleInterface, TypeTitleInterface {
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		global $wpdb;
+		if ( $id instanceof \WP_Term ){
+			return new static( $id );
+		}
 
+		global $wpdb;
 		$taxonomy = $wpdb->get_var( $wpdb->prepare( "SELECT `taxonomy` FROM {$wpdb->term_taxonomy} WHERE `term_id` = %d LIMIT 1", $id ) );
 		$object = get_term( $id, $taxonomy );
-
-		return new self( $object );
+		return new static( $object );
 	}
 
 	/**

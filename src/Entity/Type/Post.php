@@ -24,9 +24,12 @@ class Post extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		$object = get_post( $id );
+		if ( $id instanceof \WP_Post ) {
+			return new static( $id );
+		}
 
-		return new self( $object );
+		$object = get_post( $id );
+		return new static( $object );
 	}
 
 	/**

@@ -25,18 +25,9 @@ abstract class PageBase {
 	private $routed = FALSE;
 
 	/**
-	 * Where messages are stored in the options table.
-	 *
-	 * @var string
+	 * @var Messenger
 	 */
-	protected $messagesOptionName = 'kinglet_admin_messages';
-
-	/**
-	 * Array of stored messages.
-	 *
-	 * @var array
-	 */
-	public $messages = [];
+	protected $messenger;
 
 	/**
 	 * This page's title.
@@ -73,60 +64,6 @@ abstract class PageBase {
 		if ( is_callable( [ $this, 'scripts' ] ) ) {
 			add_action( 'admin_enqueue_scripts', [ $this, 'scripts' ] );
 		}
-
-		$this->loadMessages();
-	}
-
-	/**
-	 * Load the stored messages.
-	 */
-	public function loadMessages() {
-		$this->messages = get_option( $this->messagesOptionName, [] );
-	}
-
-	/**
-	 * Save the messages.
-	 */
-	protected function saveMessages() {
-		update_option( $this->messagesOptionName, $this->messages, FALSE );
-	}
-
-	/**
-	 * Add a new message for the current user.
-	 *
-	 * @param $message
-	 * @param $type
-	 */
-	public function addMessage( $message, $type ) {
-		$uid = wp_get_current_user()->ID;
-		$hash = md5( $message . $type );
-
-		$this->messages[ $uid ][ $hash ] = [
-			'message' => $message,
-			'type' => $type,
-			'timestamp' => time(),
-		];
-
-		$this->saveMessages();
-	}
-
-	/**
-	 * Get messages for the current user and clear them.
-	 *
-	 * @return array
-	 */
-	public function getMessages() {
-		$uid = wp_get_current_user()->ID;
-
-		if ( ! empty( $this->messages[ $uid ] ) ) {
-			$messages = array_values( $this->messages[ $uid ] );
-			unset( $this->messages[ $uid ] );
-			$this->saveMessages();
-
-			return $messages;
-		}
-
-		return [];
 	}
 
 	/**
@@ -327,6 +264,38 @@ abstract class PageBase {
 			exit;
 		}
 	}
+
+	/**
+     * Provide a messenger if one is not already set.
+     *
+	 * @return Messenger
+	 */
+	protected function messenger() {
+	    if ( !$this->messenger ) {
+	        $this->messenger = new Messenger( wp_get_current_user() );
+        }
+
+	    return $this->messenger;
+    }
+
+	/**
+	 * Add a new item to the store.
+	 *
+	 * @param string $message
+	 * @param string $type
+	 */
+	protected function addMessage( $message, $type ) {
+        $this->messenger()->add( $message, $type );
+    }
+
+	/**
+     * Get and clear all messages.
+     *
+	 * @return array
+	 */
+    protected function getMessages() {
+	    return $this->messenger()->get();
+    }
 
 	/**
 	 * Output the page.

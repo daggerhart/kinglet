@@ -24,9 +24,12 @@ class User extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		$object = get_user_by( 'id', $id );
+		if ( $id instanceof \WP_User ) {
+			return new static ( $id );
+		}
 
-		return new self( $object );
+		$object = get_user_by( 'id', $id );
+		return new static( $object );
 	}
 
 	/**

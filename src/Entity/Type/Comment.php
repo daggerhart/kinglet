@@ -23,8 +23,11 @@ class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		$object = get_comment( $id );
+		if ( $id instanceof \WP_Comment ) {
+			return new static( $id );
+		}
 
+		$object = get_comment( $id );
 		return new self( $object );
 	}
 
