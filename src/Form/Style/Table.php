@@ -39,6 +39,9 @@ class Table extends FormStyleBase {
 					<label for="<?php echo esc_attr( $field['id'] ); ?>" class="field-label">
 						<?php echo $field['title']; ?>
 					</label>
+					<?php if ( ! empty( $field['required'] ) ) : ?>
+						<span class="required">*</span>
+					<?php endif ?>
 				<?php endif; ?>
 			</th>
 			<td>

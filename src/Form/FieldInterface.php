@@ -18,4 +18,14 @@ interface FieldInterface {
 	 */
 	public function render($field );
 
+	/**
+	 * Prepare the field for rendering. Modify the field array and return it.
+	 *
+	 * @param array $field
+	 * @param string $name
+	 *
+	 * @return array
+	 */
+	public function process( $field, $name );
+
 }

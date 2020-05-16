@@ -13,6 +13,11 @@ class Checkbox extends FieldBase {
 		return 'checkbox';
 	}
 
+	public function process( $field, $name ) {
+		$field['label_first'] = FALSE;
+		return parent::process( $field, $name );
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

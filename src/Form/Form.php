@@ -297,9 +297,9 @@ class Form {
 		}
 		$field['name'] = sanitize_title( $field['name'] );
 
-		if ( $field['type'] == 'checkbox' ) {
-			$field['label_first'] = FALSE;
-		}
+		// Allow the field type a chance to alter field data.
+		$field_type = $this->getFieldTypeInstance( $field['type'] );
+		$field = $field_type->process( $field, $name );
 
 		// build the field's entire form name
 		$field['form_name'] = '';
@@ -309,10 +309,10 @@ class Form {
 		if ( ! empty( $field['name_prefix'] ) ) {
 			$field['form_name'] .= $field['name_prefix'];
 		}
-
 		if ( ! empty( $field['form_name'] ) ) {
 			$field['form_name'] .= '[' . $field['name'] . ']';
-		} else {
+		}
+		else {
 			$field['form_name'] .= $field['name'];
 		}
 
@@ -330,6 +330,10 @@ class Form {
 				'edit',
 				sanitize_title( $field['name'] )
 			] );
+		}
+
+		if ( !empty( $field['required'] ) ) {
+			$field['attributes']['required'] = TRUE;
 		}
 
 		return $field;
