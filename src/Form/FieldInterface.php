@@ -14,8 +14,8 @@ interface FieldInterface {
 	/**
 	 * Generate and output the field HTML.
 	 *
-	 * @param $context
+	 * @param $field
 	 */
-	public function render( $context );
+	public function render($field );
 
 }

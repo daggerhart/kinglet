@@ -15,11 +15,15 @@ trait TraitAttributes {
 	public function attributes( $array, $prefix ='' ) {
 		$attributes = [];
 		foreach ($array as $name => $value) {
+            $attribute = "{$prefix}{$name}";
 			if ( is_array( $value ) ) {
 				$value = implode( ' ', $value );
 			}
-			$value = esc_attr($value);
-			$attributes[] = "{$prefix}{$name}='{$value}'";
+			if ( $value !== TRUE ) {
+                $value = esc_attr($value);
+                $attribute.= "='{$value}'";
+            }
+			$attributes[] = $attribute;
 		}
 		return implode( ' ', $attributes );
 	}
