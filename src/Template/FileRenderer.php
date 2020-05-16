@@ -5,6 +5,7 @@ namespace Kinglet\Template;
 use Kinglet\Container\ContainerInterface;
 use Kinglet\Container\ContainerInjectionInterface;
 use Kinglet\FileSystem\Finder;
+use SplFileInfo;
 
 /**
  * Class Renderer
@@ -30,7 +31,7 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	/**
 	 * Last found suggestion.
 	 *
-	 * @var bool|\SplFileInfo
+	 * @var bool|SplFileInfo
 	 */
 	protected $foundSuggestion = false;
 
@@ -45,8 +46,8 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 */
 	protected $options = [
 		'paths' => [],
-		'theme_search' => TRUE,
-		'theme_first' => TRUE,
+		'theme_search' => true,
+		'theme_first' => true,
 		'extension' => '.php',
 	];
 
@@ -59,16 +60,17 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 		parent::__construct( $options );
 	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function create( ContainerInterface $container ) {
-        $static = new static();
-        $static->setFinder( $container->get( 'finder' ) );
-        return $static;
-    }
+		$static = new static();
+		$static->setFinder( $container->get( 'finder' ) );
 
-    /**
+		return $static;
+	}
+
+	/**
 	 * Set a new FileSystem for locating templates.
 	 *
 	 * @param Finder $file_system
@@ -103,18 +105,18 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 * @param array|string $suggestions
 	 *   Desired template filenames ordered from lowest to highest priority.
 	 *
-	 * @return \SplFileInfo|false
+	 * @return SplFileInfo|false
 	 */
 	public function find( $suggestions ) {
 		$this->suggestions = $this->prepareSuggestions( $suggestions );
-		$this->foundSuggestion = FALSE;
-		$theme_searched = FALSE;
+		$this->foundSuggestion = false;
+		$theme_searched = false;
 		$options = $this->getOptions();
 
 		// Search in theme first.
 		if ( $options['theme_included'] && $options['theme_first'] ) {
 			$this->foundSuggestion = $this->locateInTheme( $this->suggestions );
-			$theme_searched = TRUE;
+			$theme_searched = true;
 			if ( $this->foundSuggestion ) {
 				return $this->foundSuggestion;
 			}
@@ -125,9 +127,10 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 			return $this->foundSuggestion;
 		}
 		// Search in theme.
-		if ( $options['theme_included'] && !$theme_searched ) {
+		if ( $options['theme_included'] && ! $theme_searched ) {
 			$this->foundSuggestion = $this->locateInTheme( $this->suggestions );
 		}
+
 		return $this->foundSuggestion;
 	}
 
@@ -137,7 +140,7 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 * @param array|string $filenames
 	 * @param array $paths Optionally override the directories searched.
 	 *
-	 * @return \SplFileInfo|false
+	 * @return SplFileInfo|false
 	 */
 	public function locateInPaths( $filenames, $paths = [] ) {
 		$files = $this->finder->in( $paths )->files( $filenames );
@@ -146,17 +149,17 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 			return $file;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
 	 * Find the first template found within the theme folders.
 	 *
-	 * @see \locate_template()
-	 *
 	 * @param array|string $filenames
 	 *
-	 * @return \SplFileInfo|false
+	 * @return SplFileInfo|false
+	 * @see \locate_template()
+	 *
 	 */
 	public function locateInTheme( $filenames ) {
 		$files = $this->finder->in( [
@@ -169,7 +172,7 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 			return $file;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -181,12 +184,13 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 */
 	public function prepareSuggestions( $suggestions ) {
 		$suggestions = array_reverse( (array) $suggestions );
-		$suggestions = array_map( function( $suggestion ) {
+		$suggestions = array_map( function ( $suggestion ) {
 			// Append the stored extension to a suggestion if it doesn't have it.
 			$extension = substr( $suggestion, strlen( $this->options['extension'] ) );
 			if ( strcasecmp( $extension, $this->options['extension'] ) !== 0 ) {
 				$suggestion .= $this->options['extension'];
 			}
+
 			return $suggestion;
 		}, $suggestions );
 
@@ -196,17 +200,18 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	/**
 	 * Perform the template rendering.
 	 *
-	 * @param \SplFileInfo $__template
+	 * @param SplFileInfo $__template
 	 * @param array $__context
 	 *
 	 * @return string
 	 */
 	private function renderTemplate( $__template, $__context ) {
 		ob_start();
-		foreach ( $__context as $key => $value) {
+		foreach ( $__context as $key => $value ) {
 			${$key} = $value;
 		}
 		include $__template->getRealPath();
+
 		return ob_get_clean();
 	}
 

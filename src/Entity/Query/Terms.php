@@ -4,6 +4,7 @@ namespace Kinglet\Entity\Query;
 
 use Kinglet\Entity\QueryBase;
 use Kinglet\Entity\Type\Term;
+use WP_Term_Query;
 
 /**
  * Class Terms
@@ -22,8 +23,8 @@ class Terms extends QueryBase {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function execute( $callback = NULL ) {
-		$this->query = new \WP_Term_Query( $this->arguments );
+	public function execute( $callback = null ) {
+		$this->query = new WP_Term_Query( $this->arguments );
 
 		foreach ( $this->query->get_terms() as $term ) {
 			$item = new Term( $term );

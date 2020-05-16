@@ -17,14 +17,14 @@ class StringRenderer extends RendererBase implements ContainerInjectionInterface
 		'suffix' => ' }}',
 	];
 
-    /**
-     * @inheritDoc
-     */
+	/**
+	 * @inheritDoc
+	 */
 	public static function create( ContainerInterface $container ) {
-        return new static();
-    }
+		return new static();
+	}
 
-    /**
+	/**
 	 * Simple string replacement with context key character wrappings.
 	 *
 	 * @param string $template
@@ -36,6 +36,7 @@ class StringRenderer extends RendererBase implements ContainerInjectionInterface
 	 */
 	public function render( $template, $context = [] ) {
 		$pairs = $this->replacements( $context );
+
 		return strtr( $template, $pairs );
 	}
 
@@ -54,6 +55,7 @@ class StringRenderer extends RendererBase implements ContainerInjectionInterface
 		foreach ( $templates as $i => $template ) {
 			$rendered[ $i ] = strtr( $template, $pairs );
 		}
+
 		return $rendered;
 	}
 
@@ -69,6 +71,7 @@ class StringRenderer extends RendererBase implements ContainerInjectionInterface
 		foreach ( $context as $key => $value ) {
 			$pairs[ $this->options['prefix'] . $key . $this->options['suffix'] ] = $value;
 		}
+
 		return $pairs;
 	}
 

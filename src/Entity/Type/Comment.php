@@ -6,16 +6,19 @@ use Kinglet\Entity\TypeBase;
 use Kinglet\Entity\TypeAuthorInterface;
 use Kinglet\Entity\TypeImageInterface;
 use Kinglet\Entity\TypeTitleInterface;
+use stdClass;
+use WP_Comment;
+use WP_User;
 
 /**
  * Class Comment
  *
  * @package Kinglet\Entity\Type
  */
-class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface,TypeAuthorInterface {
+class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface, TypeAuthorInterface {
 
 	/**
-	 * @var \WP_Comment
+	 * @var WP_Comment
 	 */
 	protected $object;
 
@@ -23,11 +26,12 @@ class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		if ( $id instanceof \WP_Comment ) {
+		if ( $id instanceof WP_Comment ) {
 			return new static( $id );
 		}
 
 		$object = get_comment( $id );
+
 		return new self( $object );
 	}
 
@@ -75,13 +79,14 @@ class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface
 	 */
 	public function title() {
 		$clean = strip_tags( $this->content() );
+
 		return wp_trim_words( $clean, 8, '' );
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function image( $size = NULL ) {
+	public function image( $size = null ) {
 		return get_avatar( $this->author()->email(), $size, '', $this->author()->title() );
 	}
 
@@ -90,17 +95,16 @@ class Comment extends TypeBase implements TypeTitleInterface, TypeImageInterface
 	 */
 	public function author() {
 		if ( $this->object->user_id ) {
-			$user = new \WP_User( $this->object->user_id );
-		}
-		else {
-			$data = new \stdClass();
+			$user = new WP_User( $this->object->user_id );
+		} else {
+			$data = new stdClass();
 			$data->ID = 0;
 			$data->display_name = $this->object->comment_author;
 			$data->user_nicename = sanitize_title_with_dashes( $this->object->comment_author );
 			$data->user_email = $this->object->comment_author_email;
 			$data->user_url = $this->object->comment_author_url;
 
-			$user = new \WP_User( $data );
+			$user = new WP_User( $data );
 		}
 
 		return new User( $user );

@@ -2,4 +2,7 @@
 
 namespace Kinglet\Invoker;
 
-class InvokerReflectionException extends \ReflectionException {}
+use ReflectionException;
+
+class InvokerReflectionException extends ReflectionException {
+}

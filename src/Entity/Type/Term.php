@@ -5,6 +5,7 @@ namespace Kinglet\Entity\Type;
 use Kinglet\Entity\TypeBase;
 use Kinglet\Entity\TypeBundleInterface;
 use Kinglet\Entity\TypeTitleInterface;
+use WP_Term;
 
 /**
  * Class Term
@@ -14,7 +15,7 @@ use Kinglet\Entity\TypeTitleInterface;
 class Term extends TypeBase implements TypeBundleInterface, TypeTitleInterface {
 
 	/**
-	 * @var \WP_Term
+	 * @var WP_Term
 	 */
 	protected $object;
 
@@ -22,13 +23,14 @@ class Term extends TypeBase implements TypeBundleInterface, TypeTitleInterface {
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		if ( $id instanceof \WP_Term ){
+		if ( $id instanceof WP_Term ) {
 			return new static( $id );
 		}
 
 		global $wpdb;
 		$taxonomy = $wpdb->get_var( $wpdb->prepare( "SELECT `taxonomy` FROM {$wpdb->term_taxonomy} WHERE `term_id` = %d LIMIT 1", $id ) );
 		$object = get_term( $id, $taxonomy );
+
 		return new static( $object );
 	}
 

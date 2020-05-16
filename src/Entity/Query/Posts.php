@@ -4,6 +4,7 @@ namespace Kinglet\Entity\Query;
 
 use Kinglet\Entity\QueryBase;
 use Kinglet\Entity\Type\Post;
+use WP_Query;
 
 /**
  * Class Posts
@@ -30,7 +31,7 @@ class Posts extends QueryBase {
 			'search' => 's',
 		] );
 
-		$this->query = new \WP_Query( $arguments );
+		$this->query = new WP_Query( $arguments );
 
 		if ( $this->query->have_posts() ) {
 			while ( $this->query->have_posts() ) {

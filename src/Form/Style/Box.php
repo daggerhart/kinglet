@@ -26,25 +26,25 @@ class Box extends FormStyleBase {
 				<label for="<?php echo esc_attr( $field['id'] ); ?>" class="field-label">
 					<?php echo $field['title']; ?>
 				</label>
-				<?php if ( !empty( $field['required'] ) ) : ?>
+				<?php if ( ! empty( $field['required'] ) ) : ?>
 					<span class="required">*</span>
 				<?php endif ?>
 			</div>
 
 			<div class="box-content">
-				<?php if ( !empty( $field['description'] ) ) : ?>
+				<?php if ( ! empty( $field['description'] ) ) : ?>
 					<p class="description"><?php echo $field['description']; ?></p>
 				<?php endif; ?>
 
 				<?php echo $field_html; ?>
 
-				<?php if ( !empty( $field['title'] ) && !$field['label_first'] ) : ?>
+				<?php if ( ! empty( $field['title'] ) && ! $field['label_first'] ) : ?>
 					<label for="<?php echo esc_attr( $field['id'] ); ?>" class="field-label">
 						<?php echo $field['title']; ?>
 					</label>
 				<?php endif; ?>
 
-				<?php if ( !empty( $field['help'] ) ) : ?>
+				<?php if ( ! empty( $field['help'] ) ) : ?>
 					<p class="description"><?php echo $field['help']; ?></p>
 				<?php endif; ?>
 			</div>

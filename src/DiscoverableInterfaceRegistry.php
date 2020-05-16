@@ -3,6 +3,10 @@
 namespace Kinglet;
 
 use Kinglet\FileSystem\Finder;
+use ReflectionClass;
+use ReflectionException;
+use RuntimeException;
+use SplFileInfo;
 
 /**
  * Class DiscoverableInterfaceRegistry
@@ -77,12 +81,12 @@ class DiscoverableInterfaceRegistry extends Registry {
 	 * {@inheritdoc}
 	 */
 	public function getIterator() {
-	if ( empty( $this->items ) ) {
-		$this->items = $this->discover();
-	}
+		if ( empty( $this->items ) ) {
+			$this->items = $this->discover();
+		}
 
-	return parent::getIterator();
-}
+		return parent::getIterator();
+	}
 
 	/**
 	 * {@inheritdoc}
@@ -97,12 +101,13 @@ class DiscoverableInterfaceRegistry extends Registry {
 
 	/**
 	 * @param string $id
+	 *
 	 * @return string
-	 * @throws \RuntimeException
+	 * @throws RuntimeException
 	 */
 	public function get( $id ) {
 		if ( empty( $this->items[ $id ] ) ) {
-			throw new \RuntimeException( 'Definition ID not found: ' . $id );
+			throw new RuntimeException( 'Definition ID not found: ' . $id );
 		}
 
 		return $this->items[ $id ];
@@ -142,27 +147,27 @@ class DiscoverableInterfaceRegistry extends Registry {
 		foreach ( $this->getSources() as $namespace => $location ) {
 			$finder = new Finder();
 			$results = $finder->recurse()->in( $location )->files( '*.php' );
-            $replacements = [
-                $location => '',
-                '.php' =>  '',
-                DIRECTORY_SEPARATOR => '\\',
-            ];
+			$replacements = [
+				$location => '',
+				'.php' => '',
+				DIRECTORY_SEPARATOR => '\\',
+			];
 
-			/** @var \SplFileInfo $file */
+			/** @var SplFileInfo $file */
 			foreach ( $results as $file ) {
-                $class = strtr( $file->getRealPath(), $replacements );
-                $class = trim( $class, '\\' );
+				$class = strtr( $file->getRealPath(), $replacements );
+				$class = trim( $class, '\\' );
 
-				if ( is_string( $namespace ) && !is_numeric( $namespace ) ) {
+				if ( is_string( $namespace ) && ! is_numeric( $namespace ) ) {
 					// Convert path into namespace using PSR-4 standard.
 					$namespace = rtrim( $namespace, '\\' ) . '\\';
-                    $class = $namespace . $class;
+					$class = $namespace . $class;
 				}
 
 				try {
-					$reflection = new \ReflectionClass( $class );
+					$reflection = new ReflectionClass( $class );
 
-					if ( !$reflection->isAbstract() && !$reflection->isInterface() && in_array( $this->interfaceName, $reflection->getInterfaceNames() ) ) {
+					if ( ! $reflection->isAbstract() && ! $reflection->isInterface() && in_array( $this->interfaceName, $reflection->getInterfaceNames() ) ) {
 						$id = $i;
 						if ( $this->idMethodName && is_callable( [ $class, $this->idMethodName ] ) ) {
 							$id = call_user_func( [ $class, $this->idMethodName ] );
@@ -170,11 +175,11 @@ class DiscoverableInterfaceRegistry extends Registry {
 						$definitions[ $id ] = $class;
 					}
 				}
-				catch ( \ReflectionException $exception ) {
+				catch ( ReflectionException $exception ) {
 					// Fail silently ... for now.
 				}
 
-				$i++;
+				$i ++;
 			}
 		}
 

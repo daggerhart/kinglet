@@ -6,6 +6,7 @@ use Kinglet\Container\ContainerInjectionInterface;
 use Kinglet\Container\ContainerInterface;
 use Kinglet\Entity\Type\User;
 use Kinglet\Entity\TypeInterface;
+use WP_User;
 
 class Messenger implements ContainerInjectionInterface {
 
@@ -27,7 +28,7 @@ class Messenger implements ContainerInjectionInterface {
 	/**
 	 * Messenger constructor.
 	 *
-	 * @param int|\WP_User $user_id
+	 * @param int|WP_User $user_id
 	 * @param $meta_name
 	 */
 	public function __construct( $user_id, $meta_name = 'kinglet_admin_messages' ) {

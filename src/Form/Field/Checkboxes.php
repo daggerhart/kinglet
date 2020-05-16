@@ -17,27 +17,27 @@ class Checkboxes extends FieldBase {
 	 * {@inheritDoc}
 	 */
 	public function render( $field ) {
-		$field['class'].= ' checkboxes-item';
+		$field['class'] .= ' checkboxes-item';
 		$i = 0;
-		if ( !is_array( $field['value'] ) ) {
+		if ( ! is_array( $field['value'] ) ) {
 			$field['value'] = array( $field['value'] => $field['value'] );
 		}
 
-		foreach( $field['options'] as $value => $details ){
+		foreach ( $field['options'] as $value => $details ) {
 			// default to assuming not-array
 			$label = $details;
 			$description = null;
 			$data = null;
 
 			// if array is given, get the title, description, and data
-			if ( is_array( $details ) && isset( $details['title'] ) ){
+			if ( is_array( $details ) && isset( $details['title'] ) ) {
 				$label = $details['title'];
 
-				if ( !empty( $details['description'] ) ){
+				if ( ! empty( $details['description'] ) ) {
 					$description = $details['description'];
 				}
 
-				if ( !empty( $details['data'] ) ) {
+				if ( ! empty( $details['data'] ) ) {
 					$data = $details['data'];
 				}
 			}
@@ -52,7 +52,9 @@ class Checkboxes extends FieldBase {
 						class="<?php echo esc_attr( $field['class'] ); ?>"
 						value="<?php echo esc_attr( $value ); ?>"
 						<?php checked( isset( $field['value'][ $value ] ) ); ?>
-						<?php if ( $data ) print $this->attributes( $data, 'data-' ); ?>
+						<?php if ( $data ) {
+							print $this->attributes( $data, 'data-' );
+						} ?>
 					>
 					<?php echo $label; ?>
 				</label>
@@ -61,7 +63,7 @@ class Checkboxes extends FieldBase {
 				<?php endif; ?>
 			</div>
 			<?php
-			$i++;
+			$i ++;
 		}
 	}
 

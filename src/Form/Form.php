@@ -4,6 +4,7 @@ namespace Kinglet\Form;
 
 use Kinglet\DiscoverableInterfaceRegistry;
 use Kinglet\Template\RendererInterface;
+use RuntimeException;
 
 /**
  * Class Form
@@ -29,7 +30,7 @@ class Form {
 		// Prefix all field names with this value.
 		'form_prefix' => 'kinglet',
 		// Include the <form> element during rendering.
-		'form_element' => TRUE,
+		'form_element' => true,
 		// Additional form_element attributes.
 		'attributes' => [],
 		// Form Style name.
@@ -88,8 +89,8 @@ class Form {
 		'class' => [],
 		'value' => '',
 		'name' => '',
-		'label_first' => TRUE,
-		'access' => TRUE,
+		'label_first' => true,
+		'access' => true,
 
 		// [top-lvl][mid-lvl][bottom-lvl]
 		'name_prefix' => '',
@@ -118,7 +119,7 @@ class Form {
 	 * @param DiscoverableInterfaceRegistry $form_styles
 	 * @param DiscoverableInterfaceRegistry $field_types
 	 */
-	public function __construct( $form_options, RendererInterface $renderer, DiscoverableInterfaceRegistry $form_styles, DiscoverableInterfaceRegistry $field_types  ) {
+	public function __construct( $form_options, RendererInterface $renderer, DiscoverableInterfaceRegistry $form_styles, DiscoverableInterfaceRegistry $field_types ) {
 		$this->setOptions( $form_options );
 		$this->setFields( $this->formOptions['fields'] );
 		$this->renderer = $renderer;
@@ -126,12 +127,12 @@ class Form {
 		$this->fieldTypes = $field_types;
 	}
 
-    /**
-     * @param array $form_options
-     */
+	/**
+	 * @param array $form_options
+	 */
 	public function setOptions( $form_options = [] ) {
-        $this->formOptions = array_replace( $this->defaultFormOptions, $form_options );
-    }
+		$this->formOptions = array_replace( $this->defaultFormOptions, $form_options );
+	}
 
 	/**
 	 * Get the fields array.
@@ -168,7 +169,7 @@ class Form {
 	 * @return FormStyleInterface
 	 */
 	function getFormStyle( $style_name ) {
-		if ( !$this->formStyle && $this->formStyles->has( $style_name ) ) {
+		if ( ! $this->formStyle && $this->formStyles->has( $style_name ) ) {
 			$style = $this->formStyles->get( $style_name );
 			$this->formStyle = new $style();
 		}
@@ -188,9 +189,8 @@ class Form {
 			if ( $this->fieldTypes->has( $type ) ) {
 				$field_type = $this->fieldTypes->get( $type );
 				$this->fieldTypesInstances[ $type ] = new $field_type();
-			}
-			else {
-				throw new \RuntimeException( __( 'Field type not found: ' .$type ) );
+			} else {
+				throw new RuntimeException( __( 'Field type not found: ' . $type ) );
 			}
 		}
 
@@ -221,6 +221,7 @@ class Form {
 				'form-style--' . $style->name()
 			],
 		] );
+
 		return ob_get_clean();
 	}
 
@@ -237,6 +238,7 @@ class Form {
 		if ( $this->formOptions['form_element'] ) {
 			echo "</form>";
 		}
+
 		return ob_get_clean();
 	}
 
@@ -276,6 +278,7 @@ class Form {
 
 		// Template the wrapper.
 		$style = $this->getFormStyle( $this->formOptions['style'] );
+
 		return $this->renderer->render( [ $style, 'fieldWrapper' ], [
 			'field' => $field,
 			'field_html' => $field_html,
@@ -311,8 +314,7 @@ class Form {
 		}
 		if ( ! empty( $field['form_name'] ) ) {
 			$field['form_name'] .= '[' . $field['name'] . ']';
-		}
-		else {
+		} else {
 			$field['form_name'] .= $field['name'];
 		}
 
@@ -326,14 +328,14 @@ class Form {
 		$field['class'] = implode( ' ', $field['class'] );
 
 		if ( empty( $field['id'] ) ) {
-			$field['id'] = implode('--',[
+			$field['id'] = implode( '--', [
 				'edit',
 				sanitize_title( $field['name'] )
 			] );
 		}
 
-		if ( !empty( $field['required'] ) ) {
-			$field['attributes']['required'] = TRUE;
+		if ( ! empty( $field['required'] ) ) {
+			$field['attributes']['required'] = true;
 		}
 
 		return $field;
@@ -347,7 +349,7 @@ class Form {
 	public function getSubmittedValues() {
 		$request = $this->formOptions['method'] == 'POST' ? $_POST : $_GET;
 
-		if ( !empty( $this->formOptions['form_prefix'] ) && isset( $request[ $this->formOptions['form_prefix'] ] ) ) {
+		if ( ! empty( $this->formOptions['form_prefix'] ) && isset( $request[ $this->formOptions['form_prefix'] ] ) ) {
 			return $request[ $this->formOptions['form_prefix'] ];
 		}
 
@@ -397,14 +399,13 @@ class Form {
 			// recurse using the remaining keys
 			else if ( is_array( $data[ $key ] ) ) {
 				return $this->arrayQuery( $keys, $data[ $key ] );
-			}
-			// there are remaining keys, but this item is not an array
+			} // there are remaining keys, but this item is not an array
 			else {
-				return NULL;
+				return null;
 			}
 		}
 
-		return NULL;
+		return null;
 	}
 
 }

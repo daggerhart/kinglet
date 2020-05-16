@@ -2,12 +2,17 @@
 
 namespace Kinglet\Entity;
 
+use ArrayIterator;
+use Countable;
+use Exception;
+use IteratorAggregate;
+
 /**
  * Class AbstractNormalQuery
  *
  * @package Kinglet\Entity\Query
  */
-abstract class QueryBase implements QueryInterface, \IteratorAggregate, \Countable {
+abstract class QueryBase implements QueryInterface, IteratorAggregate, Countable {
 
 	/**
 	 * Arguments that augment the query results.
@@ -57,13 +62,13 @@ abstract class QueryBase implements QueryInterface, \IteratorAggregate, \Countab
 	 * {@inheritDoc}
 	 */
 	public function getIterator() {
-		return new \ArrayIterator( $this->results );
+		return new ArrayIterator( $this->results );
 	}
 
 	/**
 	 * Counts all the results collected by the iterators.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function count() {
 		return iterator_count( $this->getIterator() );

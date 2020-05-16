@@ -16,12 +16,12 @@ class CallableRenderer extends RendererBase implements ContainerInjectionInterfa
 	 * @var array
 	 */
 	protected $options = [
-		'silent' => TRUE,
+		'silent' => true,
 	];
 
-    /**
-     * @var InvokerInterface
-     */
+	/**
+	 * @var InvokerInterface
+	 */
 	protected $invoker;
 
 	/**
@@ -33,21 +33,22 @@ class CallableRenderer extends RendererBase implements ContainerInjectionInterfa
 		parent::__construct( $options );
 	}
 
-    /**
-     * {@inheritDoc}
-     */
+	/**
+	 * {@inheritDoc}
+	 */
 	public static function create( ContainerInterface $container ) {
-        $static = new static();
-        $static->setInvoker( $container->get( 'invoker' ) );
-        return $static;
-    }
+		$static = new static();
+		$static->setInvoker( $container->get( 'invoker' ) );
 
-    /**
-     * @param InvokerInterface $invoker
-     */
-    public function setInvoker( InvokerInterface $invoker ) {
-	    $this->invoker = $invoker;
-    }
+		return $static;
+	}
+
+	/**
+	 * @param InvokerInterface $invoker
+	 */
+	public function setInvoker( InvokerInterface $invoker ) {
+		$this->invoker = $invoker;
+	}
 
 	/**
 	 * Render a callback as if it were a template. Entire context is pass in as
@@ -70,8 +71,10 @@ class CallableRenderer extends RendererBase implements ContainerInjectionInterfa
 		try {
 			ob_start();
 			echo $this->invoker->call( $template, $context );
+
 			return ob_get_clean();
-		} catch ( ReflectionException $exception ) {
+		}
+		catch ( ReflectionException $exception ) {
 			if ( $this->options['silent'] ) {
 				return "<!-- {$exception->getMessage()} -->";
 			}

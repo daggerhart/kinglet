@@ -22,7 +22,7 @@ abstract class PageBase {
 	 *
 	 * @var bool
 	 */
-	private $routed = FALSE;
+	private $routed = false;
 
 	/**
 	 * @var Messenger
@@ -119,7 +119,7 @@ abstract class PageBase {
 	 * @return string
 	 */
 	public function pagePath() {
-		$delimiter = stripos( $this->parentSlug(), '?' ) === FALSE ? '?' : '&';
+		$delimiter = stripos( $this->parentSlug(), '?' ) === false ? '?' : '&';
 
 		return $this->parentSlug() . $delimiter . 'page=' . $this->slug();
 	}
@@ -154,7 +154,7 @@ abstract class PageBase {
 	/**
 	 * Add this page as a submenu item of another page.
 	 *
-	 * @param \Kinglet\Admin\PageBase|string $parent
+	 * @param PageBase|string $parent
 	 *   The parent page object, or the parent's slug.
 	 * @param null $position
 	 */
@@ -216,8 +216,8 @@ abstract class PageBase {
 		$valid_action = $action && ! empty( $actions[ $action ] ) && is_callable( $actions[ $action ] );
 
 		// All actions should be nonced and verified.
-		$nonce = ! empty( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : FALSE;
-		$verified = FALSE;
+		$nonce = ! empty( $_REQUEST['_wpnonce'] ) ? $_REQUEST['_wpnonce'] : false;
+		$verified = false;
 
 		if ( $nonce ) {
 			$verified = wp_verify_nonce( $nonce, $this->slug() . $action );
@@ -225,7 +225,7 @@ abstract class PageBase {
 
 		// If we have a valid action and a verified nonce, execute the action.
 		if ( $valid_action && $nonce && $verified ) {
-			$this->routed = TRUE;
+			$this->routed = true;
 			$result = call_user_func( $actions[ $action ] );
 
 			if ( is_array( $result ) && ! empty( $result['redirect'] ) ) {
@@ -253,10 +253,10 @@ abstract class PageBase {
 	 * execution.
 	 */
 	public function validateAction() {
-		$valid = FALSE;
+		$valid = false;
 
 		if ( $this->routed && $this->onPage() ) {
-			$valid = TRUE;
+			$valid = true;
 		}
 
 		if ( ! $valid ) {
@@ -266,17 +266,17 @@ abstract class PageBase {
 	}
 
 	/**
-     * Provide a messenger if one is not already set.
-     *
+	 * Provide a messenger if one is not already set.
+	 *
 	 * @return Messenger
 	 */
 	protected function messenger() {
-	    if ( !$this->messenger ) {
-	        $this->messenger = new Messenger( wp_get_current_user() );
-        }
+		if ( ! $this->messenger ) {
+			$this->messenger = new Messenger( wp_get_current_user() );
+		}
 
-	    return $this->messenger;
-    }
+		return $this->messenger;
+	}
 
 	/**
 	 * Add a new item to the store.
@@ -285,17 +285,17 @@ abstract class PageBase {
 	 * @param string $type
 	 */
 	protected function addMessage( $message, $type ) {
-        $this->messenger()->add( $message, $type );
-    }
+		$this->messenger()->add( $message, $type );
+	}
 
 	/**
-     * Get and clear all messages.
-     *
+	 * Get and clear all messages.
+	 *
 	 * @return array
 	 */
-    protected function getMessages() {
-	    return $this->messenger()->get();
-    }
+	protected function getMessages() {
+		return $this->messenger()->get();
+	}
 
 	/**
 	 * Output the page.
@@ -344,7 +344,7 @@ abstract class PageBase {
 	 *
 	 * @return array
 	 */
-	public function result( $message, $redirect = NULL, $type = 'updated' ) {
+	public function result( $message, $redirect = null, $type = 'updated' ) {
 		$result = [
 			'message' => $message,
 			'type' => $type,
@@ -365,7 +365,7 @@ abstract class PageBase {
 	 *
 	 * @return array
 	 */
-	public function error( $message = NULL, $redirect = NULL ) {
+	public function error( $message = null, $redirect = null ) {
 		if ( ! $message ) {
 			$message = __( 'Something went wrong, please refresh the page and try again.' );
 		}

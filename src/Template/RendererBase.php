@@ -12,19 +12,19 @@ abstract class RendererBase implements RendererInterface {
 	 * @param array $options
 	 */
 	public function __construct( $options = [] ) {
-		if ( !empty( $options ) ) {
+		if ( ! empty( $options ) ) {
 			$this->setOptions( $options );
 		}
 	}
 
-    /**
-     * Get the current renderer configuration.
-     *
-     * @return array
-     */
-    public function getOptions() {
-        return $this->options;
-    }
+	/**
+	 * Get the current renderer configuration.
+	 *
+	 * @return array
+	 */
+	public function getOptions() {
+		return $this->options;
+	}
 
 	/**
 	 * Set new configuration values.

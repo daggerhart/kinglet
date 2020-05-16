@@ -13,11 +13,10 @@ trait TraitDebug {
 	 */
 	public function d() {
 		ob_start();
-		foreach (func_get_args() as $value) {
-			if (function_exists('dump')) {
-				dump($value);
-			}
-			else {
+		foreach ( func_get_args() as $value ) {
+			if ( function_exists( 'dump' ) ) {
+				dump( $value );
+			} else {
 				echo "<pre>" . print_r( $value, 1 ) . "</pre>";
 			}
 		}

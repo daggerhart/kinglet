@@ -27,7 +27,7 @@ class FileFilterIterator extends FilterIterator {
 	protected $noMatchRegexps = [];
 
 	/**
-	 * @param \Iterator $iterator The Iterator to filter
+	 * @param Iterator $iterator The Iterator to filter
 	 * @param string[] $matchPatterns An array of patterns that need to match
 	 * @param string[] $noMatchPatterns An array of patterns that need to not match
 	 * @param int $mode File type mode.
@@ -53,13 +53,13 @@ class FileFilterIterator extends FilterIterator {
 	public function accept() {
 		// Check the mode for file type.
 		$fileinfo = $this->current();
-		if (self::ONLY_DIRECTORIES === (self::ONLY_DIRECTORIES & $this->mode) && $fileinfo->isFile()) {
+		if ( self::ONLY_DIRECTORIES === ( self::ONLY_DIRECTORIES & $this->mode ) && $fileinfo->isFile() ) {
 			return false;
-		} elseif (self::ONLY_FILES === (self::ONLY_FILES & $this->mode) && $fileinfo->isDir()) {
+		} elseif ( self::ONLY_FILES === ( self::ONLY_FILES & $this->mode ) && $fileinfo->isDir() ) {
 			return false;
 		}
 
-		return $this->isAccepted($this->current()->getFilename());
+		return $this->isAccepted( $this->current()->getFilename() );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class FileFilterIterator extends FilterIterator {
 		// should at least not match one rule to exclude
 		foreach ( $this->noMatchRegexps as $regex ) {
 			if ( preg_match( $regex, $string ) ) {
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -99,15 +99,15 @@ class FileFilterIterator extends FilterIterator {
 		if ( $this->matchRegexps ) {
 			foreach ( $this->matchRegexps as $regex ) {
 				if ( preg_match( $regex, $string ) ) {
-					return TRUE;
+					return true;
 				}
 			}
 
-			return FALSE;
+			return false;
 		}
 
 		// If there is no match rules, the file is accepted
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -133,12 +133,12 @@ class FileFilterIterator extends FilterIterator {
 				] as $delimiters
 			) {
 				if ( $start === $delimiters[0] && $end === $delimiters[1] ) {
-					return TRUE;
+					return true;
 				}
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 }

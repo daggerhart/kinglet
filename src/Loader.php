@@ -14,52 +14,54 @@ use Kinglet\Template\StringRenderer;
 
 class Loader {
 
-    const KINGLET_SRC = __DIR__;
+	const KINGLET_SRC = __DIR__;
 
-    /**
-     * @return ContainerInterface
-     */
-    public static function createContainer() {
-        $container = new Container( [
-            'invoker' => Invoker::class,
-            'finder' => Finder::class,
-            'renderer' => FileRenderer::class,
-            'renderer.callable' => CallableRenderer::class,
-            'renderer.string' => StringRenderer::class,
-            'form.factory' => FormFactory::class,
-	        'current_user' => 'wp_get_current_user',
-	        'messenger' => Messenger::class,
-        ] );
+	/**
+	 * @return ContainerInterface
+	 */
+	public static function createContainer() {
+		$container = new Container( [
+			'invoker' => Invoker::class,
+			'finder' => Finder::class,
+			'renderer' => FileRenderer::class,
+			'renderer.callable' => CallableRenderer::class,
+			'renderer.string' => StringRenderer::class,
+			'form.factory' => FormFactory::class,
+			'current_user' => 'wp_get_current_user',
+			'messenger' => Messenger::class,
+		] );
 
-        // Field Types
-        $container->set( 'form.field_types', function() {
-            add_filter( 'kinglet--field-types--sources', function ($sources) {
-                $sources['Kinglet\Form\Field'] = self::KINGLET_SRC . '/Form/Field';
-                return $sources;
-            } );
+		// Field Types
+		$container->set( 'form.field_types', function () {
+			add_filter( 'kinglet--field-types--sources', function ( $sources ) {
+				$sources['Kinglet\Form\Field'] = self::KINGLET_SRC . '/Form/Field';
 
-            return new DiscoverableInterfaceRegistry(
-                'Kinglet\Form\FieldInterface',
-                'name',
-                'kinglet--field-types--sources'
-            );
-        } );
+				return $sources;
+			} );
 
-        // Form Styles
-        $container->set( 'form.form_styles', function() {
-            add_filter( 'kinglet--form-styles--sources', function ($sources) {
-                $sources['Kinglet\Form\Style'] = self::KINGLET_SRC . '/Form/Style';
-                return $sources;
-            } );
+			return new DiscoverableInterfaceRegistry(
+				'Kinglet\Form\FieldInterface',
+				'name',
+				'kinglet--field-types--sources'
+			);
+		} );
 
-            return new DiscoverableInterfaceRegistry(
-                'Kinglet\Form\FormStyleInterface',
-                'name',
-                'kinglet--form-styles--sources'
-            );
-        } );
+		// Form Styles
+		$container->set( 'form.form_styles', function () {
+			add_filter( 'kinglet--form-styles--sources', function ( $sources ) {
+				$sources['Kinglet\Form\Style'] = self::KINGLET_SRC . '/Form/Style';
 
-        return $container;
-    }
+				return $sources;
+			} );
+
+			return new DiscoverableInterfaceRegistry(
+				'Kinglet\Form\FormStyleInterface',
+				'name',
+				'kinglet--form-styles--sources'
+			);
+		} );
+
+		return $container;
+	}
 
 }

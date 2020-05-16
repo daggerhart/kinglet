@@ -7,6 +7,7 @@ use Kinglet\Entity\TypeAuthorInterface;
 use Kinglet\Entity\TypeBundleInterface;
 use Kinglet\Entity\TypeImageInterface;
 use Kinglet\Entity\TypeTitleInterface;
+use WP_User;
 
 /**
  * Class User
@@ -16,7 +17,7 @@ use Kinglet\Entity\TypeTitleInterface;
 class User extends TypeBase implements TypeBundleInterface, TypeTitleInterface, TypeImageInterface, TypeAuthorInterface {
 
 	/**
-	 * @var \WP_User
+	 * @var WP_User
 	 */
 	protected $object;
 
@@ -24,11 +25,12 @@ class User extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		if ( $id instanceof \WP_User ) {
+		if ( $id instanceof WP_User ) {
 			return new static ( $id );
 		}
 
 		$object = get_user_by( 'id', $id );
+
 		return new static( $object );
 	}
 
@@ -90,7 +92,7 @@ class User extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	public function bundleInfo() {
 		$roles = [];
 
-		foreach ($this->object->roles as $role ) {
+		foreach ( $this->object->roles as $role ) {
 			$roles[ $role ] = get_role( $role );
 		}
 

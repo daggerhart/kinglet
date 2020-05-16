@@ -4,6 +4,7 @@ namespace Kinglet\Entity\Query;
 
 use Kinglet\Entity\QueryBase;
 use Kinglet\Entity\Type\User;
+use WP_User_Query;
 
 /**
  * Class Users
@@ -22,8 +23,8 @@ class Users extends QueryBase {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function execute( $callback = NULL ) {
-		$this->query = new \WP_User_Query( $this->arguments );
+	public function execute( $callback = null ) {
+		$this->query = new WP_User_Query( $this->arguments );
 
 		foreach ( $this->query->get_results() as $user ) {
 			$item = new User( $user );

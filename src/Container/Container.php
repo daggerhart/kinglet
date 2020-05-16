@@ -4,6 +4,8 @@ namespace Kinglet\Container;
 
 use Kinglet\Invoker\Invoker;
 use Kinglet\Invoker\InvokerInterface;
+use ReflectionException;
+use RuntimeException;
 
 class Container implements ContainerInterface {
 
@@ -24,7 +26,7 @@ class Container implements ContainerInterface {
 	 */
 	protected $invoker;
 
-	public function __construct( array $definitions = [], InvokerInterface $invoker = NULL ) {
+	public function __construct( array $definitions = [], InvokerInterface $invoker = null ) {
 		$this->definitions = $definitions;
 		$this->invoker = $invoker ? $invoker : $this->createInvoker();
 	}
@@ -46,7 +48,7 @@ class Container implements ContainerInterface {
 			return isset( $this->definitions[ $key ] );
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -59,15 +61,15 @@ class Container implements ContainerInterface {
 		}
 
 		$definition = $this->getDefinition( $key );
-		if ( !$definition ) {
-			throw new \RuntimeException( __( 'No entry or class found for ' . $key ) );
+		if ( ! $definition ) {
+			throw new RuntimeException( __( 'No entry or class found for ' . $key ) );
 		}
 		try {
-		    $this->items[ $key ] = $this->invokeDefinition( $definition );
+			$this->items[ $key ] = $this->invokeDefinition( $definition );
 		}
-		catch( \ReflectionException $exception ) {
-		    // Fail silently for now.
-        }
+		catch ( ReflectionException $exception ) {
+			// Fail silently for now.
+		}
 
 		return $this->items[ $key ];
 	}
@@ -88,29 +90,30 @@ class Container implements ContainerInterface {
 		if ( isset( $this->definitions[ $key ] ) ) {
 			return $this->definitions[ $key ];
 		}
-		return FALSE;
+
+		return false;
 	}
 
-    /**
-     * @param callable $definition
-     *
-     * @return mixed
-     */
+	/**
+	 * @param callable $definition
+	 *
+	 * @return mixed
+	 */
 	protected function invokeDefinition( $definition ) {
-        // ContainerInjectionInterface class
-        if ( is_string( $definition ) && class_exists( $definition ) && is_a( $definition, 'Kinglet\Container\ContainerInjectionInterface', TRUE ) ) {
-            $definition = [$definition, 'create'];
-        }
+		// ContainerInjectionInterface class
+		if ( is_string( $definition ) && class_exists( $definition ) && is_a( $definition, 'Kinglet\Container\ContainerInjectionInterface', true ) ) {
+			$definition = [ $definition, 'create' ];
+		}
 
-        $instance = $this->invoker->call( $definition, [
-            'container' => $this,
-        ] );
+		$instance = $this->invoker->call( $definition, [
+			'container' => $this,
+		] );
 
-        // ContainerAwareInterface class
-        if ( is_a( $instance, 'Kinglet\Container\ContainerAwareInterface', TRUE ) ) {
-            $instance->setContainer( $this );
-        }
+		// ContainerAwareInterface class
+		if ( is_a( $instance, 'Kinglet\Container\ContainerAwareInterface', true ) ) {
+			$instance->setContainer( $this );
+		}
 
-        return $instance;
+		return $instance;
 	}
 }

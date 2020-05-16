@@ -17,12 +17,12 @@ class ListItems extends FieldBase {
 	 * {@inheritDoc}
 	 */
 	public function render( $field ) {
-		$type = !empty( $field['list_type'] ) ? $field['list_type'] : 'ul';
+		$type = ! empty( $field['list_type'] ) ? $field['list_type'] : 'ul';
 		?>
-		<<?php echo $type ?> <?php echo $this->attributes( $field['attributes'] ); ?>>
-			<?php foreach ( $field['items'] as $key => $item ) { ?>
-				<li class="item"><?php print $item; ?></li>
-			<?php } ?>
+		<<?php echo $type ?><?php echo $this->attributes( $field['attributes'] ); ?>>
+		<?php foreach ( $field['items'] as $key => $item ) { ?>
+			<li class="item"><?php print $item; ?></li>
+		<?php } ?>
 		</<?php echo $type ?>>
 		<?php
 	}

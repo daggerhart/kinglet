@@ -4,6 +4,7 @@ namespace Kinglet\Entity\Query;
 
 use Kinglet\Entity\QueryBase;
 use Kinglet\Entity\Type\Comment;
+use WP_Comment_Query;
 
 /**
  * Class Comments
@@ -23,7 +24,7 @@ class Comments extends QueryBase {
 	 * {@inheritdoc}
 	 */
 	public function execute( $callback = null ) {
-		$this->query = new \WP_Comment_Query( $this->arguments );
+		$this->query = new WP_Comment_Query( $this->arguments );
 
 		foreach ( $this->query->get_comments() as $comment ) {
 			$item = new Comment( $comment );

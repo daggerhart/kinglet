@@ -31,9 +31,10 @@ class Textarea extends FieldBase {
 	 * Help prevent excessive slashes and potential malicious code
 	 *
 	 * @param $value
+	 *
 	 * @return string
 	 */
-	function escape( $value ){
+	function escape( $value ) {
 		return stripcslashes( esc_textarea( str_replace( "\\", "", $value ) ) );
 	}
 

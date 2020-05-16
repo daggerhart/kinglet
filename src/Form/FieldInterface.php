@@ -16,7 +16,7 @@ interface FieldInterface {
 	 *
 	 * @param $field
 	 */
-	public function render($field );
+	public function render( $field );
 
 	/**
 	 * Prepare the field for rendering. Modify the field array and return it.

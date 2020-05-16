@@ -25,8 +25,9 @@ class Select extends FieldBase {
 			id="<?php echo esc_attr( $field['id'] ); ?>"
 			class="<?php echo esc_attr( $field['class'] ); ?>"
 			<?php echo $this->attributes( $field['attributes'] ); ?> >
-			<?php foreach( $field['options'] as $value => $option ) : ?>
-				<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $field['value'] ); ?>><?php echo esc_html( $option ); ?></option>
+			<?php foreach ( $field['options'] as $value => $option ) : ?>
+				<option
+					value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $field['value'] ); ?>><?php echo esc_html( $option ); ?></option>
 			<?php endforeach; ?>
 		</select>
 		<?php

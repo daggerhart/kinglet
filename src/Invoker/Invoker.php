@@ -2,6 +2,7 @@
 
 namespace Kinglet\Invoker;
 
+use Closure;
 use Kinglet\Container\ContainerInterface;
 use Kinglet\Container\ContainerInjectionInterface;
 use ReflectionParameter;
@@ -19,57 +20,60 @@ use ReflectionMethod;
  */
 class Invoker implements InvokerInterface, ContainerInjectionInterface {
 
-    /**
-     * @inheritDoc
-     */
-    public static function create( ContainerInterface $container ) {
-        return new static();
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public static function create( ContainerInterface $container ) {
+		return new static();
+	}
 
-    /**
-     * @param $callable
-     * @param array $parameters
-     *
-     * @return mixed
-     * @throws \ReflectionException
-     */
+	/**
+	 * @param $callable
+	 * @param array $parameters
+	 *
+	 * @return mixed
+	 * @throws ReflectionException
+	 */
 	public function call( $callable, array $parameters = [] ) {
 		$reflection = $this->getReflection( $callable );
 		if ( $reflection instanceof ReflectionClass ) {
-            return $this->constructClass( $reflection, $parameters );
-        }
+			return $this->constructClass( $reflection, $parameters );
+		}
 
 		$resolved_context = $this->resolveContext( $reflection, $parameters );
+
 		return call_user_func_array( $callable, $resolved_context );
 	}
 
-    /**
-     * @param ReflectionClass $reflection
-     * @param array $parameters
-     * @return object
-     */
+	/**
+	 * @param ReflectionClass $reflection
+	 * @param array $parameters
+	 *
+	 * @return object
+	 */
 	protected function constructClass( ReflectionClass $reflection, array $parameters ) {
-        if ( null === $reflection->getConstructor() ) {
-            return $reflection->newInstanceWithoutConstructor();
-        }
-        $resolved_context = $this->resolveContext( $reflection->getConstructor(), $parameters );
-        return $reflection->newInstanceArgs( $resolved_context );
-    }
+		if ( null === $reflection->getConstructor() ) {
+			return $reflection->newInstanceWithoutConstructor();
+		}
+		$resolved_context = $this->resolveContext( $reflection->getConstructor(), $parameters );
 
-    /**
-     * Get the appropriate reflection for the callable.
-     *
-     * @link https://github.com/PHP-DI/Invoker/blob/master/src/Reflection/CallableReflection.php
-     *
-     * @param $callable
-     *
-     * @return ReflectionFunction|ReflectionMethod|ReflectionClass
-     * @throws InvokerReflectionException
-     * @throws ReflectionException
-     */
+		return $reflection->newInstanceArgs( $resolved_context );
+	}
+
+	/**
+	 * Get the appropriate reflection for the callable.
+	 *
+	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/Reflection/CallableReflection.php
+	 *
+	 * @param $callable
+	 *
+	 * @return ReflectionFunction|ReflectionMethod|ReflectionClass
+	 * @throws InvokerReflectionException
+	 * @throws ReflectionException
+	 */
 	protected function getReflection( $callable ) {
 		// Closure
-		if ( $callable instanceof \Closure ) {
+		if ( $callable instanceof Closure ) {
 			return new ReflectionFunction( $callable );
 		}
 
@@ -100,12 +104,12 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 		}
 
 		// Standard class
-        if ( is_string( $callable ) && class_exists( $callable ) ) {
-            $class = new ReflectionClass( $callable );
-            if ( $class->isInstantiable() ) {
-                return $class;
-            }
-        }
+		if ( is_string( $callable ) && class_exists( $callable ) ) {
+			$class = new ReflectionClass( $callable );
+			if ( $class->isInstantiable() ) {
+				return $class;
+			}
+		}
 
 		throw new InvokerReflectionException( __( is_string( $callable ) ? $callable : 'Instance of ' . get_class( $callable ) . '%s is not a callable' ) );
 	}
@@ -132,7 +136,8 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 			else if ( $parameter->isOptional() ) {
 				try {
 					$resolved_parameters[ $index ] = $parameter->getDefaultValue();
-				} catch ( ReflectionException $e ) {
+				}
+				catch ( ReflectionException $e ) {
 					// Can't get default values from PHP internal classes and functions
 				}
 			} // Typehinted parameters.

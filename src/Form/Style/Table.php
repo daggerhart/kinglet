@@ -32,10 +32,10 @@ class Table extends FormStyleBase {
 	 */
 	public function fieldWrapper( $field, $field_html ) {
 		?>
-		<tr id="<?php echo esc_attr( $field['id'] ) ;?>--wrapper"
+		<tr id="<?php echo esc_attr( $field['id'] ); ?>--wrapper"
 		    class="field-wrapper field-wrapper-table">
 			<th scope="row">
-				<?php if ( !empty( $field['title'] ) ) : ?>
+				<?php if ( ! empty( $field['title'] ) ) : ?>
 					<label for="<?php echo esc_attr( $field['id'] ); ?>" class="field-label">
 						<?php echo $field['title']; ?>
 					</label>
@@ -47,11 +47,11 @@ class Table extends FormStyleBase {
 			<td>
 				<?php echo $field_html; ?>
 
-				<?php if ( !empty( $field['description'] ) ) : ?>
+				<?php if ( ! empty( $field['description'] ) ) : ?>
 					<p class="description"><?php echo $field['description']; ?></p>
 				<?php endif; ?>
 
-				<?php if ( !empty( $field['help'] ) ) : ?>
+				<?php if ( ! empty( $field['help'] ) ) : ?>
 					<p class="description"><?php echo $field['help']; ?></p>
 				<?php endif; ?>
 			</td>

@@ -2,6 +2,8 @@
 
 namespace Kinglet\Entity;
 
+use Kinglet\Entity\Type\User;
+
 /**
  * Interface AuthorInterface
  *
@@ -10,7 +12,7 @@ namespace Kinglet\Entity;
 interface TypeAuthorInterface {
 
 	/**
-	 * @return \Kinglet\Entity\Type\User
+	 * @return User
 	 */
 	public function author();
 }

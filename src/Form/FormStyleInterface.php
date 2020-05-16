@@ -1,4 +1,5 @@
 <?php
+
 namespace Kinglet\Form;
 
 interface FormStyleInterface {

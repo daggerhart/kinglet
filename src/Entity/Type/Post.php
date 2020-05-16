@@ -7,6 +7,8 @@ use Kinglet\Entity\TypeAuthorInterface;
 use Kinglet\Entity\TypeBundleInterface;
 use Kinglet\Entity\TypeImageInterface;
 use Kinglet\Entity\TypeTitleInterface;
+use WP_Post;
+use WP_User;
 
 /**
  * Class Post
@@ -16,7 +18,7 @@ use Kinglet\Entity\TypeTitleInterface;
 class Post extends TypeBase implements TypeBundleInterface, TypeTitleInterface, TypeImageInterface, TypeAuthorInterface {
 
 	/**
-	 * @var \WP_Post
+	 * @var WP_Post
 	 */
 	protected $object;
 
@@ -24,11 +26,12 @@ class Post extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	 * {@inheritdoc}
 	 */
 	static public function load( $id ) {
-		if ( $id instanceof \WP_Post ) {
+		if ( $id instanceof WP_Post ) {
 			return new static( $id );
 		}
 
 		$object = get_post( $id );
+
 		return new static( $object );
 	}
 
@@ -50,7 +53,7 @@ class Post extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	 * {@inheritdoc}
 	 */
 	public function content() {
-		return apply_filters( 'the_content', get_post_field( 'post_content', $this->object) );
+		return apply_filters( 'the_content', get_post_field( 'post_content', $this->object ) );
 	}
 
 	/**
@@ -99,7 +102,8 @@ class Post extends TypeBase implements TypeBundleInterface, TypeTitleInterface, 
 	 * {@inheritdoc}
 	 */
 	public function author() {
-		$user = new \WP_User( $this->object->post_author );
+		$user = new WP_User( $this->object->post_author );
+
 		return new User( $user );
 	}
 

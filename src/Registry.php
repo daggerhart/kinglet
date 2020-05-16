@@ -2,10 +2,15 @@
 
 namespace Kinglet;
 
+use ArrayIterator;
+use Countable;
+use Exception;
+use IteratorAggregate;
+
 /**
  * Class Registry.
  */
-class Registry implements RegistryInterface, \IteratorAggregate, \Countable {
+class Registry implements RegistryInterface, IteratorAggregate, Countable {
 
 	/**
 	 * Store of values.
@@ -54,21 +59,21 @@ class Registry implements RegistryInterface, \IteratorAggregate, \Countable {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function unset( $key ){
-		unset( $this->items[ $key ]);
+	public function unset( $key ) {
+		unset( $this->items[ $key ] );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public function getIterator() {
-		return new \ArrayIterator( $this->items );
+		return new ArrayIterator( $this->items );
 	}
 
 	/**
 	 * Counts all the results collected by the iterators.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function count() {
 		return iterator_count( $this->getIterator() );

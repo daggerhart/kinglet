@@ -14,7 +14,8 @@ class Checkbox extends FieldBase {
 	}
 
 	public function process( $field, $name ) {
-		$field['label_first'] = FALSE;
+		$field['label_first'] = false;
+
 		return parent::process( $field, $name );
 	}
 
@@ -32,7 +33,7 @@ class Checkbox extends FieldBase {
 		] );
 		$input->render( $hidden );
 
-		if ( !empty( $field['value'] ) ) {
+		if ( ! empty( $field['value'] ) ) {
 			$field['attributes']['checked'] = 'checked';
 		}
 		$field['value'] = 'on';

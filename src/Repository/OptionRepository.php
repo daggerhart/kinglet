@@ -37,7 +37,7 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	 *
 	 * @var bool
 	 */
-	protected $exists = FALSE;
+	protected $exists = false;
 
 	/**
 	 * OptionRepository constructor.
@@ -47,10 +47,10 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	 * @param bool $autoload
 	 *   Whether to load the option when WordPress starts up.
 	 */
-	public function __construct( $option_name, $default_values = [], $autoload = TRUE ) {
+	public function __construct( $option_name, $default_values = [], $autoload = true ) {
 		$this->optionName = $option_name;
 		$this->defaultItems = $default_values;
-		$this->exists = !!get_option( $this->optionName, FALSE );
+		$this->exists = ! ! get_option( $this->optionName, false );
 		$this->setAutoload( $autoload );
 		parent::__construct( get_option( $this->optionName, $this->defaultItems ) );
 	}
@@ -78,8 +78,9 @@ class OptionRepository extends Registry implements RepositoryInterface {
 	 */
 	public function save() {
 		if ( ! $this->exists ) {
-			$this->exists = TRUE;
+			$this->exists = true;
 		}
+
 		return update_option( $this->optionName, $this->items, $this->autoload );
 	}
 

@@ -2,6 +2,8 @@
 
 namespace Kinglet\Admin;
 
+use WP_Post;
+
 abstract class MetaBoxBase {
 
 	use TraitDebug;
@@ -16,7 +18,7 @@ abstract class MetaBoxBase {
 	 *
 	 * @var bool
 	 */
-	protected $initialized = FALSE;
+	protected $initialized = false;
 
 	/**
 	 * MetaBoxBase constructor.
@@ -26,7 +28,7 @@ abstract class MetaBoxBase {
 	public function __construct( $screens ) {
 		$this->screens = (array) $screens;
 
-		if ( !$this->initialized ) {
+		if ( ! $this->initialized ) {
 			$this->init();
 		}
 	}
@@ -56,7 +58,7 @@ abstract class MetaBoxBase {
 	 * Register the meta box with WordPress.
 	 */
 	protected function init() {
-		$this->initialized = TRUE;
+		$this->initialized = true;
 		add_action( 'add_meta_boxes', [ $this, 'addMetaBox' ] );
 
 		foreach ( $this->screens as $screen ) {
@@ -80,9 +82,10 @@ abstract class MetaBoxBase {
 	 * Save post action.
 	 *
 	 * @param int $post_id
-	 * @param \WP_Post $post
+	 * @param WP_Post $post
 	 * @param bool $updated
 	 */
-	public function save( $post_id, $post, $updated ) {}
+	public function save( $post_id, $post, $updated ) {
+	}
 
 }

@@ -12,19 +12,20 @@ trait TraitAttributes {
 	 *
 	 * @return string
 	 */
-	public function attributes( $array, $prefix ='' ) {
+	public function attributes( $array, $prefix = '' ) {
 		$attributes = [];
-		foreach ($array as $name => $value) {
-            $attribute = "{$prefix}{$name}";
+		foreach ( $array as $name => $value ) {
+			$attribute = "{$prefix}{$name}";
 			if ( is_array( $value ) ) {
 				$value = implode( ' ', $value );
 			}
-			if ( $value !== TRUE ) {
-                $value = esc_attr($value);
-                $attribute.= "='{$value}'";
-            }
+			if ( $value !== true ) {
+				$value = esc_attr( $value );
+				$attribute .= "='{$value}'";
+			}
 			$attributes[] = $attribute;
 		}
+
 		return implode( ' ', $attributes );
 	}
 
