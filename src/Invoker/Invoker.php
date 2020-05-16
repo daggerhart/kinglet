@@ -2,7 +2,11 @@
 
 namespace Kinglet\Invoker;
 
+use Kinglet\Container\ContainerInterface;
+use Kinglet\Container\ContainerInjectionInterface;
+use ReflectionParameter;
 use RuntimeException;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionFunctionAbstract;
 use ReflectionFunction;
@@ -13,30 +17,56 @@ use ReflectionMethod;
  *
  * @package Kinglet\Invoker
  */
-class Invoker implements InvokerInterface {
+class Invoker implements InvokerInterface, ContainerInjectionInterface {
 
-	/**
-	 * @param $callable
-	 * @param array $parameters
-	 *
-	 * @throws \ReflectionException
-	 */
+    /**
+     * @inheritDoc
+     */
+    public static function create( ContainerInterface $container ) {
+        return new static();
+    }
+
+    /**
+     * @param $callable
+     * @param array $parameters
+     *
+     * @return mixed
+     * @throws \ReflectionException
+     */
 	public function call( $callable, array $parameters = [] ) {
 		$reflection = $this->getReflection( $callable );
+		if ( $reflection instanceof ReflectionClass ) {
+            return $this->constructClass( $reflection, $parameters );
+        }
+
 		$resolved_context = $this->resolveContext( $reflection, $parameters );
-		call_user_func_array( $callable, $resolved_context );
+		return call_user_func_array( $callable, $resolved_context );
 	}
 
-	/**
-	 * Get the appropriate reflection for the callable.
-	 *
-	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/Reflection/CallableReflection.php
-	 *
-	 * @param $callable
-	 *
-	 * @return ReflectionFunction|ReflectionMethod
-	 * @throws \ReflectionException
-	 */
+    /**
+     * @param ReflectionClass $reflection
+     * @param array $parameters
+     * @return object
+     */
+	protected function constructClass( ReflectionClass $reflection, array $parameters ) {
+        if ( null === $reflection->getConstructor() ) {
+            return $reflection->newInstanceWithoutConstructor();
+        }
+        $resolved_context = $this->resolveContext( $reflection->getConstructor(), $parameters );
+        return $reflection->newInstanceArgs( $resolved_context );
+    }
+
+    /**
+     * Get the appropriate reflection for the callable.
+     *
+     * @link https://github.com/PHP-DI/Invoker/blob/master/src/Reflection/CallableReflection.php
+     *
+     * @param $callable
+     *
+     * @return ReflectionFunction|ReflectionMethod|ReflectionClass
+     * @throws InvokerReflectionException
+     * @throws ReflectionException
+     */
 	protected function getReflection( $callable ) {
 		// Closure
 		if ( $callable instanceof \Closure ) {
@@ -48,7 +78,7 @@ class Invoker implements InvokerInterface {
 			list( $class, $method ) = $callable;
 
 			if ( ! method_exists( $class, $method ) ) {
-				throw new RuntimeException( __( "Method {$method} does not exist on class {$class}." ) );
+				throw new InvokerReflectionException( __( "Method {$method} does not exist on class {$class}." ) );
 			}
 
 			return new ReflectionMethod( $class, $method );
@@ -69,7 +99,15 @@ class Invoker implements InvokerInterface {
 			return new ReflectionFunction( $callable );
 		}
 
-		throw new RuntimeException( __( is_string( $callable ) ? $callable : 'Instance of ' . get_class( $callable ) . '%s is not a callable' ) );
+		// Standard class
+        if ( is_string( $callable ) && class_exists( $callable ) ) {
+            $class = new ReflectionClass( $callable );
+            if ( $class->isInstantiable() ) {
+                return $class;
+            }
+        }
+
+		throw new InvokerReflectionException( __( is_string( $callable ) ? $callable : 'Instance of ' . get_class( $callable ) . '%s is not a callable' ) );
 	}
 
 	/**
@@ -77,7 +115,7 @@ class Invoker implements InvokerInterface {
 	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/ParameterResolver/AssociativeArrayResolver.php
 	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/ParameterResolver/DefaultValueResolver.php
 	 *
-	 * @param \ReflectionFunctionAbstract $reflection
+	 * @param ReflectionFunctionAbstract $reflection
 	 * @param $provided_parameters
 	 *
 	 * @return array
@@ -93,7 +131,7 @@ class Invoker implements InvokerInterface {
 			} // Optional named parameters.
 			else if ( $parameter->isOptional() ) {
 				try {
-					$resolvedParameters[ $index ] = $parameter->getDefaultValue();
+					$resolved_parameters[ $index ] = $parameter->getDefaultValue();
 				} catch ( ReflectionException $e ) {
 					// Can't get default values from PHP internal classes and functions
 				}
@@ -109,10 +147,10 @@ class Invoker implements InvokerInterface {
 		// Check all parameters are resolved
 		$diff = array_diff_key( $reflection->getParameters(), $resolved_parameters );
 		if ( ! empty( $diff ) ) {
-			/** @var \ReflectionParameter $parameter */
+			/** @var ReflectionParameter $parameter */
 			$parameter = reset( $diff );
 			$position = $parameter->getPosition() + 1;
-			throw new RuntimeException( __( "Unable to invoke the callable because no value was given for parameter {$position} ({$parameter->name})" ) );
+			throw new RuntimeException( __( "Unable to invoke the callable {$reflection->getName()} because no value was given for parameter {$position} ({$parameter->name})" ) );
 		}
 
 		return $resolved_parameters;

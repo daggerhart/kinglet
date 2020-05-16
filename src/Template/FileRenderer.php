@@ -2,6 +2,8 @@
 
 namespace Kinglet\Template;
 
+use Kinglet\Container\ContainerInterface;
+use Kinglet\Container\ContainerInjectionInterface;
 use Kinglet\FileSystem\Finder;
 
 /**
@@ -9,7 +11,7 @@ use Kinglet\FileSystem\Finder;
  *
  * @package Kinglet\Template
  */
-class FileRenderer extends RendererBase {
+class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 
 	/**
 	 * Utility for locating real files.
@@ -54,26 +56,25 @@ class FileRenderer extends RendererBase {
 	 * @param array $options
 	 */
 	public function __construct( $options = [] ) {
-		$this->setFinder( new Finder() );
 		parent::__construct( $options );
 	}
 
-	/**
+    /**
+     * {@inheritDoc}
+     */
+	public static function create( ContainerInterface $container ) {
+        $static = new static();
+        $static->setFinder( $container->get( 'finder' ) );
+        return $static;
+    }
+
+    /**
 	 * Set a new FileSystem for locating templates.
 	 *
 	 * @param Finder $file_system
 	 */
 	public function setFinder( Finder $file_system ) {
 		$this->finder = $file_system;
-	}
-
-	/**
-	 * Get the current renderer configuration.
-	 *
-	 * @return array
-	 */
-	public function getOptions() {
-		return $this->options;
 	}
 
 	/**
@@ -107,21 +108,24 @@ class FileRenderer extends RendererBase {
 	public function find( $suggestions ) {
 		$this->suggestions = $this->prepareSuggestions( $suggestions );
 		$this->foundSuggestion = FALSE;
+		$theme_searched = FALSE;
+		$options = $this->getOptions();
 
 		// Search in theme first.
-		if ( $this->options['theme_included'] && $this->options['theme_first'] ) {
+		if ( $options['theme_included'] && $options['theme_first'] ) {
 			$this->foundSuggestion = $this->locateInTheme( $this->suggestions );
+			$theme_searched = TRUE;
 			if ( $this->foundSuggestion ) {
 				return $this->foundSuggestion;
 			}
 		}
 		// Search in registered directories.
-		$this->foundSuggestion = $this->locateInPaths( $this->suggestions, $this->options['paths'] );
+		$this->foundSuggestion = $this->locateInPaths( $this->suggestions, $options['paths'] );
 		if ( $this->foundSuggestion ) {
 			return $this->foundSuggestion;
 		}
 		// Search in theme.
-		if ( $this->options['theme_included'] ) {
+		if ( $options['theme_included'] && !$theme_searched ) {
 			$this->foundSuggestion = $this->locateInTheme( $this->suggestions );
 		}
 		return $this->foundSuggestion;

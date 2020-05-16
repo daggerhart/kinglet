@@ -142,15 +142,21 @@ class DiscoverableInterfaceRegistry extends Registry {
 		foreach ( $this->getSources() as $namespace => $location ) {
 			$finder = new Finder();
 			$results = $finder->recurse()->in( $location )->files( '*.php' );
+            $replacements = [
+                $location => '',
+                '.php' =>  '',
+                DIRECTORY_SEPARATOR => '\\',
+            ];
 
 			/** @var \SplFileInfo $file */
 			foreach ( $results as $file ) {
-				$class = str_replace( '.php', '', $file->getFilename() );
+                $class = strtr( $file->getRealPath(), $replacements );
+                $class = trim( $class, '\\' );
 
 				if ( is_string( $namespace ) && !is_numeric( $namespace ) ) {
 					// Convert path into namespace using PSR-4 standard.
 					$namespace = rtrim( $namespace, '\\' ) . '\\';
-					$class = $namespace . str_replace( ['.php', DIRECTORY_SEPARATOR], ['', '\\'], $file->getBasename() );
+                    $class = $namespace . $class;
 				}
 
 				try {

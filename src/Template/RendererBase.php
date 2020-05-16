@@ -17,6 +17,15 @@ abstract class RendererBase implements RendererInterface {
 		}
 	}
 
+    /**
+     * Get the current renderer configuration.
+     *
+     * @return array
+     */
+    public function getOptions() {
+        return $this->options;
+    }
+
 	/**
 	 * Set new configuration values.
 	 *

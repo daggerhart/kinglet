@@ -2,7 +2,10 @@
 
 namespace Kinglet\Template;
 
-class StringRenderer extends RendererBase {
+use Kinglet\Container\ContainerInterface;
+use Kinglet\Container\ContainerInjectionInterface;
+
+class StringRenderer extends RendererBase implements ContainerInjectionInterface {
 
 	/**
 	 * Renderer configuration options.
@@ -14,7 +17,14 @@ class StringRenderer extends RendererBase {
 		'suffix' => ' }}',
 	];
 
-	/**
+    /**
+     * @inheritDoc
+     */
+	public static function create( ContainerInterface $container ) {
+        return new static();
+    }
+
+    /**
 	 * Simple string replacement with context key character wrappings.
 	 *
 	 * @param string $template
@@ -61,4 +71,5 @@ class StringRenderer extends RendererBase {
 		}
 		return $pairs;
 	}
+
 }

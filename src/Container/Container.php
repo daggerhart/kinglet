@@ -20,7 +20,7 @@ class Container implements ContainerInterface {
 	protected $definitions = [];
 
 	/**
-	 * @var \Kinglet\Invoker\InvokerInterface
+	 * @var InvokerInterface
 	 */
 	protected $invoker;
 
@@ -32,7 +32,7 @@ class Container implements ContainerInterface {
 	/**
 	 * Instantiate an invoker.
 	 *
-	 * @return \Kinglet\Invoker\Invoker
+	 * @return InvokerInterface
 	 */
 	protected function createInvoker() {
 		return new Invoker();
@@ -51,7 +51,6 @@ class Container implements ContainerInterface {
 
 	/**
 	 * {@inheritdoc}
-	 * @throws \ReflectionException
 	 */
 	public function get( $key ) {
 		// If the entry is already invoked we return it.
@@ -60,10 +59,15 @@ class Container implements ContainerInterface {
 		}
 
 		$definition = $this->getDefinition( $key );
-		if ( ! $definition ) {
+		if ( !$definition ) {
 			throw new \RuntimeException( __( 'No entry or class found for ' . $key ) );
 		}
-		$this->items[ $key ] = $this->invokeDefinition( $definition );
+		try {
+		    $this->items[ $key ] = $this->invokeDefinition( $definition );
+		}
+		catch( \ReflectionException $exception ) {
+		    // Fail silently for now.
+        }
 
 		return $this->items[ $key ];
 	}
@@ -87,15 +91,26 @@ class Container implements ContainerInterface {
 		return FALSE;
 	}
 
-	/**
-	 * @param callable $definition
-	 *
-	 * @return mixed
-	 * @throws \ReflectionException
-	 */
+    /**
+     * @param callable $definition
+     *
+     * @return mixed
+     */
 	protected function invokeDefinition( $definition ) {
-		return $this->invoker->call( $definition, [
-			'container' => $this,
-		] );
+        // ContainerInjectionInterface class
+        if ( is_string( $definition ) && class_exists( $definition ) && is_a( $definition, 'Kinglet\Container\ContainerInjectionInterface', TRUE ) ) {
+            $definition = [$definition, 'create'];
+        }
+
+        $instance = $this->invoker->call( $definition, [
+            'container' => $this,
+        ] );
+
+        // ContainerAwareInterface class
+        if ( is_a( $instance, 'Kinglet\Container\ContainerAwareInterface', TRUE ) ) {
+            $instance->setContainer( $this );
+        }
+
+        return $instance;
 	}
 }

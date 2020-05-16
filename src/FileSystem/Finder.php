@@ -5,12 +5,15 @@
  */
 namespace Kinglet\FileSystem;
 
+use Kinglet\Container\ContainerInterface;
+use Kinglet\Container\ContainerInjectionInterface;
+
 /**
  * Class Finder.
  *
  * @package Kinglet\FileSystem
  */
-class Finder {
+class Finder implements ContainerInjectionInterface {
 
 	/**
 	 * @var bool
@@ -32,6 +35,13 @@ class Finder {
 			$this->in( $paths );
 		}
 	}
+
+    /**
+     * @inheritDoc
+     */
+    static public function create( ContainerInterface $container ) {
+        return new static();
+    }
 
 	/**
 	 * Normalize an array of paths.

@@ -2,12 +2,13 @@
 
 namespace Kinglet\Template;
 
-use Kinglet\Invoker\Invoker;
+use Kinglet\Container\ContainerInterface;
+use Kinglet\Container\ContainerInjectionInterface;
 use Kinglet\Invoker\InvokerInterface;
 use RuntimeException;
 use ReflectionException;
 
-class CallableRenderer extends RendererBase {
+class CallableRenderer extends RendererBase implements ContainerInjectionInterface {
 
 	/**
 	 * Renderer configuration options.
@@ -18,28 +19,35 @@ class CallableRenderer extends RendererBase {
 		'silent' => TRUE,
 	];
 
-
+    /**
+     * @var InvokerInterface
+     */
 	protected $invoker;
 
 	/**
 	 * CallableRenderer constructor.
 	 *
 	 * @param array $options
-	 * @param \Kinglet\Invoker\InvokerInterface|NULL $invoker
 	 */
-	public function __construct( $options = [], InvokerInterface $invoker = null ) {
-		$this->invoker = $invoker ? $invoker : $this->createInvoker();
+	public function __construct( $options = [] ) {
 		parent::__construct( $options );
 	}
 
-	/**
-	 * Simple invoker.
-	 *
-	 * @return \Kinglet\Invoker\Invoker
-	 */
-	protected function createInvoker() {
-		return new Invoker();
-	}
+    /**
+     * {@inheritDoc}
+     */
+	public static function create( ContainerInterface $container ) {
+        $static = new static();
+        $static->setInvoker( $container->get( 'invoker' ) );
+        return $static;
+    }
+
+    /**
+     * @param InvokerInterface $invoker
+     */
+    public function setInvoker( InvokerInterface $invoker ) {
+	    $this->invoker = $invoker;
+    }
 
 	/**
 	 * Render a callback as if it were a template. Entire context is pass in as
@@ -61,7 +69,7 @@ class CallableRenderer extends RendererBase {
 
 		try {
 			ob_start();
-			$this->invoker->call( $template, $context );
+			echo $this->invoker->call( $template, $context );
 			return ob_get_clean();
 		} catch ( ReflectionException $exception ) {
 			if ( $this->options['silent'] ) {

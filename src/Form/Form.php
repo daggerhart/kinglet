@@ -3,9 +3,6 @@
 namespace Kinglet\Form;
 
 use Kinglet\DiscoverableInterfaceRegistry;
-use Kinglet\Form\FormStyleInterface;
-use Kinglet\Form\FieldInterface;
-use Kinglet\Template\CallableRenderer;
 use Kinglet\Template\RendererInterface;
 
 /**
@@ -122,59 +119,19 @@ class Form {
 	 * @param DiscoverableInterfaceRegistry $field_types
 	 */
 	public function __construct( $form_options, RendererInterface $renderer, DiscoverableInterfaceRegistry $form_styles, DiscoverableInterfaceRegistry $field_types  ) {
-		$this->formOptions = array_replace( $this->defaultFormOptions, $form_options );
-		$this->fields = $this->formOptions['fields'];
+		$this->setOptions( $form_options );
+		$this->setFields( $this->formOptions['fields'] );
 		$this->renderer = $renderer;
 		$this->formStyles = $form_styles;
 		$this->fieldTypes = $field_types;
 	}
 
-	/**
-	 * Factory for creating a form w/ default renderer and registries.
-	 *
-	 * @param array $form_options
-	 * @param RendererInterface|null $renderer
-	 * @param DiscoverableInterfaceRegistry|null $form_styles
-	 * @param DiscoverableInterfaceRegistry|null $field_types
-	 *
-	 * @return Form
-	 */
-	public static function create( $form_options = [], $renderer = null, $form_styles = null, $field_types = null ) {
-		static $default_form_styles_registered = false;
-		static $default_field_types_registered = false;
-		if ( !$renderer ) {
-			$renderer = new CallableRenderer();
-		}
-		if ( !$form_styles ) {
-			$form_styles = new DiscoverableInterfaceRegistry(
-				'Kinglet\Form\FormStyleInterface',
-				'name',
-				'kinglet--form-styles--sources'
-			);
-			if ( !$default_form_styles_registered ) {
-				add_filter( 'kinglet--form-styles--sources', function ($sources) {
-					$sources['Kinglet\Form\Style'] = __DIR__ . '/Style';
-					return $sources;
-				} );
-			}
-		}
-		if ( !$field_types ) {
-			$field_types = new DiscoverableInterfaceRegistry(
-				'Kinglet\Form\FieldInterface',
-				'name',
-				'kinglet--field-types--sources'
-			);
-			if ( !$default_field_types_registered ) {
-				add_filter( 'kinglet--field-types--sources', function ($sources) {
-					$sources['Kinglet\Form\Field'] = __DIR__ . '/Field';
-					$sources['Kinglet\Form\Field\Element'] = __DIR__ . '/Field/Element';
-					return $sources;
-				} );
-			}
-		}
-
-		return new self( $form_options, $renderer, $form_styles, $field_types );
-	}
+    /**
+     * @param array $form_options
+     */
+	public function setOptions( $form_options = [] ) {
+        $this->formOptions = array_replace( $this->defaultFormOptions, $form_options );
+    }
 
 	/**
 	 * Get the fields array.
