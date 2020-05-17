@@ -9,7 +9,7 @@ class Input extends FieldBase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function name() {
+	public function type() {
 		return 'input';
 	}
 

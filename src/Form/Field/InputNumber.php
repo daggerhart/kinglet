@@ -7,7 +7,7 @@ class InputNumber extends Input {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function name() {
+	public function type() {
 		return 'number';
 	}
 

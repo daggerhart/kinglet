@@ -9,7 +9,7 @@ interface FormStyleInterface {
 	 *
 	 * @return string
 	 */
-	public function name();
+	public function type();
 
 	/**
 	 * Output the field_html within additional elements.

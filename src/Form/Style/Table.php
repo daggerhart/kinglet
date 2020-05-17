@@ -9,7 +9,7 @@ class Table extends FormStyleBase {
 	/**
 	 * @inheritDoc
 	 */
-	public function name() {
+	public function type() {
 		return 'table';
 	}
 

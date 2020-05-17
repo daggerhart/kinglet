@@ -9,7 +9,7 @@ class Textarea extends FieldBase {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function name() {
+	public function type() {
 		return 'textarea';
 	}
 

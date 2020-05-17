@@ -9,7 +9,7 @@ class Box extends FormStyleBase {
 	/**
 	 * @inheritDoc
 	 */
-	public function name() {
+	public function type() {
 		return 'box';
 	}
 

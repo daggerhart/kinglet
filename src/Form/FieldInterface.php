@@ -9,7 +9,7 @@ interface FieldInterface {
 	 *
 	 * @return string
 	 */
-	public function name();
+	public function type();
 
 	/**
 	 * Generate and output the field HTML.

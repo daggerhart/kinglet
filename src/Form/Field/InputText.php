@@ -7,7 +7,7 @@ class InputText extends Input {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function name() {
+	public function type() {
 		return 'text';
 	}
 

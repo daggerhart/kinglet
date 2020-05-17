@@ -41,7 +41,7 @@ class Loader {
 
 			return new DiscoverableInterfaceRegistry(
 				'Kinglet\Form\FieldInterface',
-				'name',
+				'type',
 				'kinglet--field-types--sources'
 			);
 		} );
@@ -56,7 +56,7 @@ class Loader {
 
 			return new DiscoverableInterfaceRegistry(
 				'Kinglet\Form\FormStyleInterface',
-				'name',
+				'type',
 				'kinglet--form-styles--sources'
 			);
 		} );

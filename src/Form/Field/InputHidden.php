@@ -7,7 +7,7 @@ class InputHidden extends Input {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function name() {
+	public function type() {
 		return 'hidden';
 	}
 

@@ -7,7 +7,7 @@ class InputEmail extends Input {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function name() {
+	public function type() {
 		return 'email';
 	}
 

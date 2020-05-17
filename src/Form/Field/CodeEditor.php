@@ -7,7 +7,7 @@ class CodeEditor extends Textarea {
 	/**
 	 * @inheritDoc
 	 */
-	public function name() {
+	public function type() {
 		return 'code_editor';
 	}
 

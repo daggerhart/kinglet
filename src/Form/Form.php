@@ -218,7 +218,7 @@ class Form {
 		$style->open( [
 			'class' => [
 				'form--' . $this->formOptions['id'],
-				'form-style--' . $style->name()
+				'form-style--' . $style->type()
 			],
 		] );
 
