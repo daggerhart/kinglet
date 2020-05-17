@@ -5,12 +5,12 @@ Registry is a generic object that stores values and is iterable.
 ```php
 <?php
 // Registry is a simple data store mechanism.
-$registry = new \Kinglet\Registry();
+$registry = new \Kinglet\Registry\Registry();
 $registry->set('key', 'value');
 echo $registry->get('key');
 
 // It can act like an array.
-$registry = new \Kinglet\Registry( [
+$registry = new \Kinglet\Registry\Registry( [
     'first' => 1,
     'second' => 2,
     'another' => 3,
@@ -32,7 +32,7 @@ The discovery sources (file paths) are loaded with a WordPress filter name you d
 /*
  * Discoverable Interface Registry is used to find PHP classes.
  */
-$registry = new \Kinglet\DiscoverableInterfaceRegistry(
+$registry = new \Kinglet\Registry\DiscoverableInterfaceRegistry(
     // Namespaced interface to discover. 
     'MyPlugin\CustomInterfaceName',
     // (optional) Name of method defined by interface that uniquely identifies an implementation.

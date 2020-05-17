@@ -1,15 +1,13 @@
 <?php
 
-namespace Kinglet\Repository;
-
-use Kinglet\Registry;
+namespace Kinglet\Registry;
 
 /**
  * Class OptionRepository
  *
  * @package Kinglet
  */
-class OptionRepository extends Registry implements RepositoryInterface {
+class OptionRepository extends Registry implements RegistryRepositoryInterface {
 
 	/**
 	 * Value of the option_name column in the wp_options table.

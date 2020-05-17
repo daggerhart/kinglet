@@ -8,7 +8,7 @@ All types share the same method names to retrieve shared data.
 
 ```php
 <?php
-$typesRegistry = new \Kinglet\DiscoverableInterfaceRegistry(
+$typesRegistry = new \Kinglet\Registry\DiscoverableInterfaceRegistry(
     'Kinglet\Entity\TypeInterface',
     'type',
     'example-types'
@@ -45,7 +45,7 @@ With shared types we can now share query interfaces.
 
 ```php
 <?php
-$queryRegistry = new \Kinglet\DiscoverableInterfaceRegistry(
+$queryRegistry = new \Kinglet\Registry\DiscoverableInterfaceRegistry(
     'Kinglet\Entity\QueryInterface',
     'type',
     'example-queries'

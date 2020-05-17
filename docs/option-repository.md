@@ -6,7 +6,7 @@ Similar to the Registry, OptionRepository is iterable.
 
 ```php
 <?php
-$repo = new \Kinglet\Repository\OptionRepository( 'my_plugin_settings', [
+$repo = new \Kinglet\Registry\OptionRepository( 'my_plugin_settings', [
 	'key_1' => 'a',
 	'key_2' => 'b',
 	'another_key' => 1,
@@ -31,7 +31,7 @@ foreach ( $repo as $name => $value ) {
 $repo->save();
 
 // Default values only apply if no database values are found during instantiation.
-$repo = new \Kinglet\Repository\OptionRepository( 'my_plugin_settings', [
+$repo = new \Kinglet\Registry\OptionRepository( 'my_plugin_settings', [
 	'key_1' => 'a',
 	'key_2' => 'b',
 	'another_key' => 1,

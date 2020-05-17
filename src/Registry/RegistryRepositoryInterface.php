@@ -1,8 +1,8 @@
 <?php
 
-namespace Kinglet\Repository;
+namespace Kinglet\Registry;
 
-interface RepositoryInterface {
+interface RegistryRepositoryInterface extends RegistryInterface {
 
 	/**
 	 * Save the item to the storage system.

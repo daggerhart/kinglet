@@ -8,6 +8,7 @@ use Kinglet\Container\ContainerInterface;
 use Kinglet\FileSystem\Finder;
 use Kinglet\Form\FormFactory;
 use Kinglet\Invoker\Invoker;
+use Kinglet\Registry\DiscoverableInterfaceRegistry;
 use Kinglet\Template\CallableRenderer;
 use Kinglet\Template\FileRenderer;
 use Kinglet\Template\StringRenderer;

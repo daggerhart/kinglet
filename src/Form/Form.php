@@ -2,7 +2,7 @@
 
 namespace Kinglet\Form;
 
-use Kinglet\DiscoverableInterfaceRegistry;
+use Kinglet\Registry\DiscoverableInterfaceRegistry;
 use Kinglet\Template\RendererInterface;
 use RuntimeException;
 

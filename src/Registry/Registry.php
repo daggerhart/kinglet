@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinglet;
+namespace Kinglet\Registry;
 
 use ArrayIterator;
 use Countable;
