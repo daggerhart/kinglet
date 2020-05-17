@@ -32,9 +32,8 @@ class Loader {
 			'messenger' => Messenger::class,
 		] );
 
-		// Field Types
-		$container->set( 'form.field_types', function () {
-			add_filter( 'kinglet--field-types--sources', function ( $sources ) {
+		$container->set( 'form.field_type.manager', function () {
+			add_filter( 'kinglet--field-type--sources', function ( $sources ) {
 				$sources['Kinglet\Form\Field'] = self::KINGLET_SRC . '/Form/Field';
 
 				return $sources;
@@ -43,13 +42,12 @@ class Loader {
 			return new DiscoverableInterfaceRegistry(
 				'Kinglet\Form\FieldInterface',
 				'type',
-				'kinglet--field-types--sources'
+				'kinglet--field-type--sources'
 			);
 		} );
 
-		// Form Styles
-		$container->set( 'form.form_styles', function () {
-			add_filter( 'kinglet--form-styles--sources', function ( $sources ) {
+		$container->set( 'form.form_style.manager', function () {
+			add_filter( 'kinglet--form-style--sources', function ( $sources ) {
 				$sources['Kinglet\Form\Style'] = self::KINGLET_SRC . '/Form/Style';
 
 				return $sources;
@@ -58,7 +56,33 @@ class Loader {
 			return new DiscoverableInterfaceRegistry(
 				'Kinglet\Form\FormStyleInterface',
 				'type',
-				'kinglet--form-styles--sources'
+				'kinglet--form-style--sources'
+			);
+		} );
+
+		$container->set( 'entity.type.manager', function() {
+			add_filter( 'kinglet--entity-type--manager', function ( $sources ) {
+				$sources['\Kinglet\Entity\Type'] = self::KINGLET_SRC . '/Entity/Type';
+				return $sources;
+			} );
+
+			return new DiscoverableInterfaceRegistry(
+				'Kinglet\Entity\QueryInterface',
+				'type',
+				'kinglet--entity-type--manager'
+			);
+		} );
+
+		$container->set( 'entity.query.manager', function() {
+			add_filter( 'kinglet--entity-query--manager', function ( $sources ) {
+				$sources['\Kinglet\Entity\Query'] = self::KINGLET_SRC . '/Entity/Query';
+				return $sources;
+			} );
+
+			return new DiscoverableInterfaceRegistry(
+				'Kinglet\Entity\TypeInterface',
+				'type',
+				'kinglet--entity-query--manager'
 			);
 		} );
 

@@ -30,8 +30,8 @@ class FormFactory implements ContainerAwareInterface {
 		return new Form(
 			$form_options,
 			$this->container->get( 'renderer.callable' ),
-			$this->container->get( 'form.form_styles' ),
-			$this->container->get( 'form.field_types' )
+			$this->container->get( 'form.form_style.manager' ),
+			$this->container->get( 'form.field_type.manager' )
 		);
 	}
 

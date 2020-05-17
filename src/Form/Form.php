@@ -52,7 +52,7 @@ class Form {
 	 *
 	 * @var DiscoverableInterfaceRegistry
 	 */
-	protected $formStyles;
+	protected $formStyleManager;
 
 	/**
 	 * @var FormStyleInterface
@@ -64,12 +64,12 @@ class Form {
 	 *
 	 * @var DiscoverableInterfaceRegistry
 	 */
-	protected $fieldTypes;
+	protected $fieldTypeManager;
 
 	/**
 	 * @var FieldInterface[]
 	 */
-	protected $fieldTypesInstances = [];
+	protected $fieldTypeInstances = [];
 
 	/**
 	 * @var RendererInterface
@@ -123,8 +123,8 @@ class Form {
 		$this->setOptions( $form_options );
 		$this->setFields( $this->formOptions['fields'] );
 		$this->renderer = $renderer;
-		$this->formStyles = $form_styles;
-		$this->fieldTypes = $field_types;
+		$this->formStyleManager = $form_styles;
+		$this->fieldTypeManager = $field_types;
 	}
 
 	/**
@@ -169,8 +169,8 @@ class Form {
 	 * @return FormStyleInterface
 	 */
 	function getFormStyle( $style_name ) {
-		if ( ! $this->formStyle && $this->formStyles->has( $style_name ) ) {
-			$style = $this->formStyles->get( $style_name );
+		if ( ! $this->formStyle && $this->formStyleManager->has( $style_name ) ) {
+			$style = $this->formStyleManager->get( $style_name );
 			$this->formStyle = new $style();
 		}
 
@@ -185,16 +185,16 @@ class Form {
 	 * @return FieldInterface
 	 */
 	function getFieldTypeInstance( $type ) {
-		if ( ! $this->fieldTypesInstances[ $type ] ) {
-			if ( $this->fieldTypes->has( $type ) ) {
-				$field_type = $this->fieldTypes->get( $type );
-				$this->fieldTypesInstances[ $type ] = new $field_type();
+		if ( ! $this->fieldTypeInstances[ $type ] ) {
+			if ( $this->fieldTypeManager->has( $type ) ) {
+				$field_type = $this->fieldTypeManager->get( $type );
+				$this->fieldTypeInstances[ $type ] = new $field_type();
 			} else {
 				throw new RuntimeException( __( 'Field type not found: ' . $type ) );
 			}
 		}
 
-		return $this->fieldTypesInstances[ $type ];
+		return $this->fieldTypeInstances[ $type ];
 	}
 
 	/**
