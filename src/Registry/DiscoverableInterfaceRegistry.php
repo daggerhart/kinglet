@@ -13,7 +13,7 @@ use SplFileInfo;
  *
  * @package Kinglet
  */
-class DiscoverableInterfaceRegistry extends Registry {
+class DiscoverableInterfaceRegistry extends Registry implements RegistryClassInterface {
 
 	/**
 	 * Interface to register.
@@ -100,17 +100,33 @@ class DiscoverableInterfaceRegistry extends Registry {
 	}
 
 	/**
-	 * @param string $id
+	 * @param string $key
 	 *
 	 * @return string
 	 * @throws RuntimeException
 	 */
-	public function get( $id ) {
-		if ( empty( $this->items[ $id ] ) ) {
-			throw new RuntimeException( 'Definition ID not found: ' . $id );
+	public function get( $key ) {
+		if ( ! $this->has( $key ) ) {
+			throw new RuntimeException( 'Definition ID not found: ' . $key );
 		}
 
-		return $this->items[ $id ];
+		return $this->items[ $key ];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getReflection( $key ) {
+		$class_name = $this->get( $key );
+		return new ReflectionClass( $class_name );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getInstance( $key, array $parameters = [] ) {
+		$reflection = $this->getReflection( $key );
+		return $reflection->newInstanceArgs( $parameters );
 	}
 
 	/**
@@ -166,13 +182,12 @@ class DiscoverableInterfaceRegistry extends Registry {
 
 				try {
 					$reflection = new ReflectionClass( $class );
-
 					if ( ! $reflection->isAbstract() && ! $reflection->isInterface() && in_array( $this->interfaceName, $reflection->getInterfaceNames() ) ) {
-						$id = $i;
+						$key = $i;
 						if ( $this->idMethodName && is_callable( [ $class, $this->idMethodName ] ) ) {
-							$id = call_user_func( [ $class, $this->idMethodName ] );
+							$key = call_user_func( [ $class, $this->idMethodName ] );
 						}
-						$definitions[ $id ] = $class;
+						$definitions[ $key ] = $class;
 					}
 				}
 				catch ( ReflectionException $exception ) {

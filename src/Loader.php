@@ -67,7 +67,7 @@ class Loader {
 			} );
 
 			return new DiscoverableInterfaceRegistry(
-				'Kinglet\Entity\QueryInterface',
+				'Kinglet\Entity\TypeInterface',
 				'type',
 				'kinglet--entity-type--manager'
 			);
@@ -80,7 +80,7 @@ class Loader {
 			} );
 
 			return new DiscoverableInterfaceRegistry(
-				'Kinglet\Entity\TypeInterface',
+				'Kinglet\Entity\QueryInterface',
 				'type',
 				'kinglet--entity-query--manager'
 			);
