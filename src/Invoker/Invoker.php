@@ -6,7 +6,6 @@ use Closure;
 use Kinglet\Container\ContainerInterface;
 use Kinglet\Container\ContainerInjectionInterface;
 use ReflectionParameter;
-use RuntimeException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunctionAbstract;
@@ -33,6 +32,7 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 	 *
 	 * @return mixed
 	 * @throws ReflectionException
+	 * @throws NotEnoughParametersException
 	 */
 	public function call( $callable, array $parameters = [] ) {
 		$reflection = $this->getReflection( $callable );
@@ -40,9 +40,8 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 			return $this->constructClass( $reflection, $parameters );
 		}
 
-		$resolved_context = $this->resolveContext( $reflection, $parameters );
-
-		return call_user_func_array( $callable, $resolved_context );
+		$resolved_parameters = $this->resolveParameters( $reflection, $parameters );
+		return call_user_func_array( $callable, $resolved_parameters );
 	}
 
 	/**
@@ -50,14 +49,15 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 	 * @param array $parameters
 	 *
 	 * @return object
+	 * @throws NotEnoughParametersException
 	 */
 	protected function constructClass( ReflectionClass $reflection, array $parameters ) {
 		if ( null === $reflection->getConstructor() ) {
 			return $reflection->newInstanceWithoutConstructor();
 		}
-		$resolved_context = $this->resolveContext( $reflection->getConstructor(), $parameters );
+		$resolved_parameters = $this->resolveParameters( $reflection->getConstructor(), $parameters );
 
-		return $reflection->newInstanceArgs( $resolved_context );
+		return $reflection->newInstanceArgs( $resolved_parameters );
 	}
 
 	/**
@@ -115,7 +115,9 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 	}
 
 	/**
+	 * Match the provided parameters to the reflection signature.
 	 *
+	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/ParameterResolver/NumericArrayResolver.php
 	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/ParameterResolver/AssociativeArrayResolver.php
 	 * @link https://github.com/PHP-DI/Invoker/blob/master/src/ParameterResolver/DefaultValueResolver.php
 	 *
@@ -123,16 +125,29 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 	 * @param $provided_parameters
 	 *
 	 * @return array
+	 * @throws NotEnoughParametersException
 	 */
-	protected function resolveContext( ReflectionFunctionAbstract $reflection, $provided_parameters ) {
+	protected function resolveParameters( ReflectionFunctionAbstract $reflection, $provided_parameters ) {
 		$reflection_parameters = $reflection->getParameters();
 		$resolved_parameters = [];
 
+		// Numeric array parameters.
+		foreach ( $provided_parameters as $index => $value ) {
+			if ( is_int( $index ) ) {
+				$resolved_parameters[ $index ] = $value;
+			}
+		}
+
 		foreach ( $reflection_parameters as $index => $parameter ) {
+			if ( isset( $resolved_parameters[ $index ] ) ) {
+				continue;
+			}
+
 			// Associative array parameters.
 			if ( array_key_exists( $parameter->name, $provided_parameters ) ) {
 				$resolved_parameters[ $index ] = $provided_parameters[ $parameter->name ];
-			} // Optional named parameters.
+			}
+			// Optional named parameters.
 			else if ( $parameter->isOptional() ) {
 				try {
 					$resolved_parameters[ $index ] = $parameter->getDefaultValue();
@@ -140,7 +155,8 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 				catch ( ReflectionException $e ) {
 					// Can't get default values from PHP internal classes and functions
 				}
-			} // Typehinted parameters.
+			}
+			// Typehinted parameters.
 			else {
 				$parameter_class = $parameter->getClass();
 				if ( $parameter_class && array_key_exists( $parameter_class->name, $provided_parameters ) ) {
@@ -155,7 +171,7 @@ class Invoker implements InvokerInterface, ContainerInjectionInterface {
 			/** @var ReflectionParameter $parameter */
 			$parameter = reset( $diff );
 			$position = $parameter->getPosition() + 1;
-			throw new RuntimeException( __( "Unable to invoke the callable {$reflection->getName()} because no value was given for parameter {$position} ({$parameter->name})" ) );
+			throw new NotEnoughParametersException( __( "Unable to invoke the callable {$reflection->getName()} because no value was given for parameter {$position} ({$parameter->name})" ) );
 		}
 
 		return $resolved_parameters;
