@@ -13,7 +13,7 @@ use SplFileInfo;
  *
  * @package Kinglet
  */
-class DiscoverableInterfaceRegistry extends Registry implements RegistryClassInterface {
+class DiscoverableInterfaceRegistry extends ClassRegistry implements ClassRegistryInterface {
 
 	/**
 	 * Interface to register.
@@ -111,22 +111,6 @@ class DiscoverableInterfaceRegistry extends Registry implements RegistryClassInt
 		}
 
 		return $this->items[ $key ];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getReflection( $key ) {
-		$class_name = $this->get( $key );
-		return new ReflectionClass( $class_name );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function getInstance( $key, array $parameters = [] ) {
-		$reflection = $this->getReflection( $key );
-		return $reflection->newInstanceArgs( $parameters );
 	}
 
 	/**

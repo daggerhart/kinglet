@@ -31,7 +31,7 @@ class Users extends QueryBase {
 			$this->results[ $item->id() ] = $item;
 
 			if ( is_callable( $callback ) ) {
-				call_user_func( $callback, $user );
+				call_user_func( $callback, $item );
 			}
 		}
 

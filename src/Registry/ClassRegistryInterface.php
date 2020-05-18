@@ -5,7 +5,7 @@ namespace Kinglet\Registry;
 use ReflectionClass;
 use ReflectionException;
 
-interface RegistryClassInterface extends RegistryInterface {
+interface ClassRegistryInterface extends RegistryInterface {
 
 	/**
 	 * @param string $key
