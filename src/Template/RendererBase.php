@@ -4,6 +4,14 @@ namespace Kinglet\Template;
 
 abstract class RendererBase implements RendererInterface {
 
+	/**
+	 * @var array
+	 */
+	protected $default_options = [];
+
+	/**
+	 * @var array
+	 */
 	protected $options = [];
 
 	/**
@@ -12,9 +20,7 @@ abstract class RendererBase implements RendererInterface {
 	 * @param array $options
 	 */
 	public function __construct( $options = [] ) {
-		if ( ! empty( $options ) ) {
-			$this->setOptions( $options );
-		}
+		$this->setOptions( $options );
 	}
 
 	/**
@@ -32,7 +38,14 @@ abstract class RendererBase implements RendererInterface {
 	 * @param array $options
 	 */
 	public function setOptions( $options = [] ) {
-		$this->options = array_replace( $this->options, $options );
+		$this->options = array_replace( $this->default_options, $options );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function resetOptions() {
+		$this->options = $this->default_options;
 	}
 
 }

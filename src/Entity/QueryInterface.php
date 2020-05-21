@@ -34,4 +34,11 @@ interface QueryInterface {
 	 */
 	public function results();
 
+	/**
+	 * Set the arguments array.
+	 *
+	 * @param array $arguments
+	 */
+	public function setArguments( array $arguments );
+
 }

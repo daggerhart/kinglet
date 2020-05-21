@@ -40,7 +40,14 @@ abstract class QueryBase implements QueryInterface, IteratorAggregate, Countable
 	 *
 	 * @param array $arguments
 	 */
-	public function __construct( array $arguments ) {
+	public function __construct( array $arguments = [] ) {
+		$this->setArguments( $arguments );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setArguments( array $arguments ) {
 		$this->arguments = $arguments;
 	}
 

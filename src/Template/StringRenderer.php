@@ -12,7 +12,7 @@ class StringRenderer extends RendererBase implements ContainerInjectionInterface
 	 *
 	 * @var array
 	 */
-	protected $options = [
+	protected $default_options = [
 		'prefix' => '{{ ',
 		'suffix' => ' }}',
 	];

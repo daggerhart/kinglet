@@ -15,7 +15,7 @@ class CallableRenderer extends RendererBase implements ContainerInjectionInterfa
 	 *
 	 * @var array
 	 */
-	protected $options = [
+	protected $default_options = [
 		'silent' => true,
 	];
 

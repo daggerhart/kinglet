@@ -87,7 +87,7 @@ interface TypeInterface {
 	/**
 	 * Return the raw object being decorated.
 	 *
-	 * @return mixed
+	 * @return object
 	 */
 	public function object();
 

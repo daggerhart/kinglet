@@ -14,4 +14,23 @@ interface RendererInterface {
 	 */
 	public function render( $templates, $context = [] );
 
+	/**
+	 * Get current renderer options.
+	 *
+	 * @return array
+	 */
+	public function getOptions();
+
+	/**
+	 * Set new options for the renderer.
+	 *
+	 * @param array $options
+	 */
+	public function setOptions( $options = [] );
+
+	/**
+	 * Reset the renderer options back to their defaults.
+	 */
+	public function resetOptions();
+
 }

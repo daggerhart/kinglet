@@ -12,7 +12,7 @@ use SplFileInfo;
  *
  * @package Kinglet\Template
  */
-class FileRenderer extends RendererBase implements ContainerInjectionInterface {
+class FileRenderer extends RendererBase {
 
 	/**
 	 * Utility for locating real files.
@@ -44,8 +44,9 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 *   theme_first (bool) - Search the theme folder first.
 	 *   extension (string) - File extension with
 	 */
-	protected $options = [
+	protected $default_options = [
 		'paths' => [],
+		'recurse' => FALSE,
 		'theme_search' => true,
 		'theme_first' => true,
 		'extension' => '.php',
@@ -58,16 +59,6 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 */
 	public function __construct( $options = [] ) {
 		parent::__construct( $options );
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public static function create( ContainerInterface $container ) {
-		$static = new static();
-		$static->setFinder( $container->get( 'finder' ) );
-
-		return $static;
 	}
 
 	/**
@@ -143,7 +134,7 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 * @return SplFileInfo|false
 	 */
 	public function locateInPaths( $filenames, $paths = [] ) {
-		$files = $this->finder->in( $paths )->files( $filenames );
+		$files = $this->finder->recurse( $this->options['recurse'] )->in( $paths )->files( $filenames );
 
 		foreach ( $files as $file ) {
 			return $file;
@@ -162,7 +153,7 @@ class FileRenderer extends RendererBase implements ContainerInjectionInterface {
 	 *
 	 */
 	public function locateInTheme( $filenames ) {
-		$files = $this->finder->in( [
+		$files = $this->finder->recurse( $this->options['recurse'] )->in( [
 			STYLESHEETPATH,
 			TEMPLATEPATH,
 			ABSPATH . WPINC . '/theme-compat/',
