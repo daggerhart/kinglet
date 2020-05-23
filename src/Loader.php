@@ -25,7 +25,7 @@ class Loader {
 		$container = new Container( [
 			'invoker' => Invoker::class,
 			'finder' => Finder::class,
-			'renderer' => FileRenderer::class,
+			'renderer.file' => FileRenderer::class,
 			'renderer.callable' => CallableRenderer::class,
 			'renderer.string' => StringRenderer::class,
 			'form.factory' => FormFactory::class,
