@@ -35,7 +35,7 @@ class Textarea extends FieldBase {
 	 * @return string
 	 */
 	function escape( $value ) {
-		return stripcslashes( esc_textarea( str_replace( "\\", "", $value ) ) );
+		return stripcslashes( esc_textarea( $value ) );
 	}
 
 }
