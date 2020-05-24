@@ -12,6 +12,20 @@ interface QueryInterface {
 	public function type();
 
 	/**
+	 * Fully namespaced WordPress query class name.
+	 *
+	 * @return string
+	 */
+	public function queryClassName();
+
+	/**
+	 * Fully namespaced Kinglet entity type class name.
+	 *
+	 * @return string
+	 */
+	public function entityClassName();
+
+	/**
 	 * Execute a query and return normalized results.
 	 *
 	 * @param null|callable $callback

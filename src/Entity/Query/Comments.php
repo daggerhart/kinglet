@@ -4,6 +4,7 @@ namespace Kinglet\Entity\Query;
 
 use Kinglet\Entity\QueryBase;
 use Kinglet\Entity\Type\Comment;
+use Kinglet\Entity\TypeInterface;
 use WP_Comment_Query;
 
 /**
@@ -21,13 +22,30 @@ class Comments extends QueryBase {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function queryClassName() {
+		return WP_Comment_Query::class;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function entityClassName() {
+		return Comment::class;
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function execute( $callback = null ) {
-		$this->query = new WP_Comment_Query( $this->arguments );
+		$query_class_name = $this->queryClassName();
+		$entity_class_name = $this->entityClassName();
+		$this->query = new $query_class_name( $this->arguments );
 
 		foreach ( $this->query->get_comments() as $comment ) {
-			$item = new Comment( $comment );
+			/** @var TypeInterface $item */
+			$item = new $entity_class_name( $comment );
 			$this->results[ $item->id() ] = $item;
 
 			if ( is_callable( $callback ) ) {

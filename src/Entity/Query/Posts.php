@@ -4,6 +4,7 @@ namespace Kinglet\Entity\Query;
 
 use Kinglet\Entity\QueryBase;
 use Kinglet\Entity\Type\Post;
+use Kinglet\Entity\TypeInterface;
 use WP_Query;
 
 /**
@@ -21,6 +22,20 @@ class Posts extends QueryBase {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function queryClassName() {
+		return WP_Query::class;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function entityClassName() {
+		return Post::class;
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function execute( $callback = null ) {
@@ -31,12 +46,15 @@ class Posts extends QueryBase {
 			'search' => 's',
 		] );
 
-		$this->query = new WP_Query( $arguments );
+		$query_class_name = $this->queryClassName();
+		$entity_class_name = $this->entityClassName();
+		$this->query = new $query_class_name( $arguments );
 
 		if ( $this->query->have_posts() ) {
 			while ( $this->query->have_posts() ) {
 				$this->query->the_post();
-				$item = new Post( get_post() );
+				/** @var TypeInterface $item */
+				$item = new $entity_class_name( get_post() );
 				$this->results[ $item->id() ] = $item;
 
 				if ( is_callable( $callback ) ) {
