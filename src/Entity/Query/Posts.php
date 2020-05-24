@@ -24,14 +24,14 @@ class Posts extends QueryBase {
 	/**
 	 * @inheritDoc
 	 */
-	public function queryClassName() {
+	public function getQueryClass() {
 		return WP_Query::class;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function entityClassName() {
+	public function getEntityClass() {
 		return Post::class;
 	}
 
@@ -46,8 +46,8 @@ class Posts extends QueryBase {
 			'search' => 's',
 		] );
 
-		$query_class_name = $this->queryClassName();
-		$entity_class_name = $this->entityClassName();
+		$query_class_name = $this->getQueryClass();
+		$entity_class_name = $this->getEntityClass();
 		$this->query = new $query_class_name( $arguments );
 
 		if ( $this->query->have_posts() ) {

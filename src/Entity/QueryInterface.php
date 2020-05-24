@@ -16,14 +16,14 @@ interface QueryInterface {
 	 *
 	 * @return string
 	 */
-	public function queryClassName();
+	public function getQueryClass();
 
 	/**
 	 * Fully namespaced Kinglet entity type class name.
 	 *
 	 * @return string
 	 */
-	public function entityClassName();
+	public function getEntityClass();
 
 	/**
 	 * Execute a query and return normalized results.

@@ -24,14 +24,14 @@ class Comments extends QueryBase {
 	/**
 	 * @inheritDoc
 	 */
-	public function queryClassName() {
+	public function getQueryClass() {
 		return WP_Comment_Query::class;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function entityClassName() {
+	public function getEntityClass() {
 		return Comment::class;
 	}
 
@@ -39,8 +39,8 @@ class Comments extends QueryBase {
 	 * {@inheritdoc}
 	 */
 	public function execute( $callback = null ) {
-		$query_class_name = $this->queryClassName();
-		$entity_class_name = $this->entityClassName();
+		$query_class_name = $this->getQueryClass();
+		$entity_class_name = $this->getEntityClass();
 		$this->query = new $query_class_name( $this->arguments );
 
 		foreach ( $this->query->get_comments() as $comment ) {
