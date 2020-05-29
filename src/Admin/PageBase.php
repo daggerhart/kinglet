@@ -4,6 +4,8 @@ namespace Kinglet\Admin;
 
 /**
  * Class PageBase
+ *
+ * @package Kinglet\Admin
  */
 abstract class PageBase {
 
@@ -25,7 +27,7 @@ abstract class PageBase {
 	private $routed = false;
 
 	/**
-	 * @var Messenger
+	 * @var MessengerInterface
 	 */
 	protected $messenger;
 
@@ -91,6 +93,47 @@ abstract class PageBase {
 	 */
 	public function actions() {
 		return [];
+	}
+
+	/**
+	 * Set the messenger explicitly.
+	 *
+	 * @param MessengerInterface $messenger
+	 */
+	public function setMessenger( MessengerInterface $messenger ) {
+		$this->messenger = $messenger;
+	}
+
+	/**
+	 * Provide a messenger if one is not already set.
+	 *
+	 * @return MessengerUser
+	 */
+	protected function messenger() {
+		if ( ! $this->messenger ) {
+			$this->messenger = new MessengerUser( wp_get_current_user() );
+		}
+
+		return $this->messenger;
+	}
+
+	/**
+	 * Add a new item to the store.
+	 *
+	 * @param string $message
+	 * @param string $type
+	 */
+	protected function addMessage( $message, $type ) {
+		$this->messenger()->add( $message, $type );
+	}
+
+	/**
+	 * Get and clear all messages.
+	 *
+	 * @return array
+	 */
+	protected function getMessages() {
+		return $this->messenger()->get();
 	}
 
 	/**
@@ -263,38 +306,6 @@ abstract class PageBase {
 			wp_safe_redirect( $this->redirectPath() );
 			exit;
 		}
-	}
-
-	/**
-	 * Provide a messenger if one is not already set.
-	 *
-	 * @return Messenger
-	 */
-	protected function messenger() {
-		if ( ! $this->messenger ) {
-			$this->messenger = new Messenger( wp_get_current_user() );
-		}
-
-		return $this->messenger;
-	}
-
-	/**
-	 * Add a new item to the store.
-	 *
-	 * @param string $message
-	 * @param string $type
-	 */
-	protected function addMessage( $message, $type ) {
-		$this->messenger()->add( $message, $type );
-	}
-
-	/**
-	 * Get and clear all messages.
-	 *
-	 * @return array
-	 */
-	protected function getMessages() {
-		return $this->messenger()->get();
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 namespace Kinglet;
 
-use Kinglet\Admin\Messenger;
+use Kinglet\Admin\MessengerUser;
 use Kinglet\Container\Container;
 use Kinglet\Container\ContainerInterface;
 use Kinglet\FileSystem\Finder;
@@ -30,7 +30,7 @@ class Loader {
 			'renderer.string' => StringRenderer::class,
 			'form.factory' => FormFactory::class,
 			'current_user' => 'wp_get_current_user',
-			'messenger' => Messenger::class,
+			'messenger' => MessengerUser::class,
 		] );
 
 		$container->set( 'entity.type.manager', function() {
