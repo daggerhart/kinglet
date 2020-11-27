@@ -169,7 +169,8 @@ class DiscoverableInterfaceRegistry extends ClassRegistry implements ClassRegist
 					if ( ! $reflection->isAbstract() && ! $reflection->isInterface() && in_array( $this->interfaceName, $reflection->getInterfaceNames() ) ) {
 						$key = $i;
 						if ( $this->idMethodName && is_callable( [ $class, $this->idMethodName ] ) ) {
-							$key = call_user_func( [ $class, $this->idMethodName ] );
+							$instance = new $class;
+							$key = call_user_func( [ $instance, $this->idMethodName ] );
 						}
 						$definitions[ $key ] = $class;
 					}

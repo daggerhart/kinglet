@@ -1,6 +1,6 @@
 <?php
 
-namespace Kinglet\Filesystem;
+namespace Kinglet\FileSystem;
 
 use Iterator;
 use FilterIterator;

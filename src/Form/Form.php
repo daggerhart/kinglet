@@ -185,7 +185,7 @@ class Form {
 	 * @return FieldInterface
 	 */
 	function getFieldTypeInstance( $type ) {
-		if ( ! $this->fieldTypeInstances[ $type ] ) {
+		if ( empty( $this->fieldTypeInstances[ $type ] ) ) {
 			if ( $this->fieldTypeManager->has( $type ) ) {
 				$field_type = $this->fieldTypeManager->get( $type );
 				$this->fieldTypeInstances[ $type ] = new $field_type();
